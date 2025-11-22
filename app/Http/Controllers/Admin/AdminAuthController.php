@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;  
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,7 +12,7 @@ class AdminAuthController extends Controller
 {
    public function loginPage()
     {
-        return view('admin.login'); // Your admin login blade
+        return view('admin.login'); 
     }
 
     public function login(Request $request)
