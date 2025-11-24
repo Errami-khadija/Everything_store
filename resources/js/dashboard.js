@@ -79,7 +79,7 @@
      });
 
         // Product Management Functions
-        function showAddProduct() {
+        window.showAddProduct = function showAddProduct() {
             document.getElementById('productsListView').classList.add('hidden');
             document.getElementById('addProductView').classList.remove('hidden');
             document.querySelector('#addProductView h3').textContent = 'Add New Product';
@@ -91,7 +91,7 @@
             document.getElementById('productCategory').value = '';
         }
 
-        function showProductsList() {
+        window.showProductsList = function showProductsList() {
             document.getElementById('addProductView').classList.add('hidden');
             document.getElementById('productsListView').classList.remove('hidden');
         }
@@ -137,38 +137,16 @@
             };
         }
 
-        function saveProduct(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById('productName').value;
-            const price = document.getElementById('productPrice').value;
-            const stock = document.getElementById('productStock').value;
-            const category = document.getElementById('productCategory').value;
-            
-            if (!name || !price || !stock || !category) {
-                showToast('Please fill in all required fields', 'error');
-                return;
-            }
-            
-            // Simulate saving
-            showToast('Product saved successfully!', 'success');
-            setTimeout(() => {
-                showProductsList();
-            }, 1000);
-        }
+        
 
-        function addSpecification() {
+       window.addSpecification = function addSpecification() {
             const container = document.querySelector('.space-y-3');
             const newSpec = document.createElement('div');
             newSpec.className = 'flex space-x-2';
             newSpec.innerHTML = `
-                <input type="text" placeholder="Specification name" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <input type="text" placeholder="Value" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <button type="button" onclick="this.parentElement.remove()" class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                </button>
+                <input type="text" name="specification_name[]" placeholder="Specification name" class="flex-1 border border-gray-300 rounded-lg px-3 py-2">
+            <input type="text" name="specification_value[]" placeholder="Value" class="flex-1 border border-gray-300 rounded-lg px-3 py-2">
+            <button type="button" onclick="this.closest('.spec-row').remove()" class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">Delete</button>
             `;
             container.insertBefore(newSpec, container.lastElementChild);
         }
@@ -343,6 +321,25 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        window.previewProductImage = function previewProductImage(event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById('imagePreview');
+
+    // Clear previous previews
+    previewContainer.innerHTML = '';
+
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.classList.add('w-24', 'h-24', 'object-cover', 'rounded', 'border');
+            previewContainer.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    });
+}
 
         // Toast notification system
         function showToast(message, type = 'info') {

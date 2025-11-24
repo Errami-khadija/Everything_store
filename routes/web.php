@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminAuthController;
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Models\Category;
 
 // Admin Login
@@ -29,6 +30,10 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     ->name('admin.categories.edit');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])
     ->name('admin.categories.update');
+
+     Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
+      Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
 
 });
 
