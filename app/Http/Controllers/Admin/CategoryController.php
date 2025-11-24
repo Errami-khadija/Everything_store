@@ -48,11 +48,16 @@ class CategoryController extends Controller
             ->with('success', 'Category created successfully');
     }
 
-    public function edit(Category $category)
+   public function edit(Category $category)
 {
-   $categories = Category::all(); 
-    return view('admin.admin-panel', compact('category', 'categories'));
+    $categories = Category::all(); 
+
+    return view('admin.admin-panel', [
+        'categories' => $categories,
+        'selectedCategory' => $category   
+    ]);
 }
+
 
 public function update(Request $request, Category $category)
 {

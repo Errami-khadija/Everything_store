@@ -34,6 +34,8 @@
             // Show selected section
             document.getElementById(sectionName + 'Section').classList.remove('hidden');
 
+            localStorage.setItem('activeSection', sectionName);
+
             // Update page title
             const titles = {
                 'dashboard': 'Dashboard',
@@ -69,6 +71,12 @@
                 mobileOverlay.classList.add('hidden');
             }
         }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+        const savedSection = localStorage.getItem('activeSection') || 'dashboard';
+        showSection(savedSection);
+     });
 
         // Product Management Functions
         function showAddProduct() {
@@ -278,18 +286,27 @@
            
         }
 
-        function showCategoriesList() {
+       window.showCategoriesList = function showCategoriesList() {
             document.getElementById('addCategoryView').classList.add('hidden');
             document.getElementById('categoriesListView').classList.remove('hidden');
         }
 
-      
+   window.showEditCategory = function showEditCategory() {
+    document.getElementById('categoriesListView').classList.add('hidden');
+    document.getElementById('addCategoryView').classList.add('hidden');
+    document.getElementById('editCategoryView').classList.remove('hidden');
+
+
+    const title = document.querySelector('#editCategoryView h3');
+    if (title) title.textContent = 'Edit Category';
+}
+
   document.addEventListener('DOMContentLoaded', function () {
     const forms = document.querySelectorAll('.delete-category-form');
 
     forms.forEach(form => {
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // stop the form from submitting immediately
+            e.preventDefault(); 
 
             Swal.fire({
                 title: 'Are you sure?',

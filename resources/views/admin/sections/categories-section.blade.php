@@ -38,7 +38,7 @@
 
         {{-- BUTTONS --}}
         <div class="flex space-x-2">
-            <a href="{{ route('admin.categories.update', $category->id) }}" 
+            <a href="{{ route('admin.categories.edit', $category->id) }}" 
                class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors text-center">
               Edit
             </a>
@@ -55,8 +55,6 @@
 
     </div>
 @endforeach
-
-      
 
       </div>
      </div>
@@ -127,4 +125,112 @@
       </div>
      </form>
     </div>
+
+    <!-- Edit Category Form -->
+<div id="editCategoryView" class="bg-white rounded-xl shadow-sm hidden">
+     @if(isset($selectedCategory))
+
+    <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-gray-800">Edit Category</h3>
+        <a href="{{ route('admin.categories.index') }}" class="text-gray-600 hover:text-gray-800">
+            ✕
+        </a>
+    </div>
+  
+    <form action="{{ route('admin.categories.update', $selectedCategory->id) }}"
+          method="POST"
+          enctype="multipart/form-data"
+          class="p-6">
+        @csrf
+        @method('PUT')
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="space-y-6">
+
+                <!-- Category Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Category Name *</label>
+                    <input type="text"
+                           name="name"
+                           value="{{ $selectedCategory->name }}"
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea name="description"
+                              rows="4"
+                              class="w-full border rounded-lg px-3 py-2">{{ $selectedCategory->description }}</textarea>
+                </div>
+
+                <!-- Image -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Image</label>
+
+                    <img src="{{ asset('storage/' . $selectedCategory->image) }}"
+                         class="w-32 h-32 object-cover rounded-lg mb-3">
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Replace Image</label>
+                    <input type="file" name="image" class="border rounded px-3 py-2 w-full">
+                </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="space-y-6">
+
+                <!-- Status -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Category Status</label>
+                    <label class="flex items-center">
+                        <input type="radio" name="status" value="Active"
+                               {{ $selectedCategory->status == 'Active' ? 'checked' : '' }}>
+                        <span class="ml-2">Active</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio" name="status" value="Inactive"
+                               {{ $selectedCategory->status == 'Inactive' ? 'checked' : '' }}>
+                        <span class="ml-2">Inactive</span>
+                    </label>
+                </div>
+
+                <!-- SEO -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">SEO Settings</label>
+                    <input type="text" name="slug"
+                           value="{{ $selectedCategory->slug }}"
+                           class="w-full border rounded px-3 py-2 mb-3">
+
+                    <textarea name="meta_description"
+                              rows="2"
+                              class="w-full border rounded px-3 py-2">{{ $selectedCategory->meta_description }}</textarea>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-end space-x-4 border-t pt-6 mt-6">
+            <a href="{{ route('admin.categories.index') }}"
+               class="px-6 py-2 border rounded-lg">Cancel</a>
+
+            <button type="submit"
+                    class="px-6 py-2 bg-blue-600 text-white rounded-lg">
+                Update Category
+            </button>
+        </div>
+    </form>
+    @endif
+
+</div>
+
    </section>
+
+@if (isset($selectedCategory))
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        showEditCategory();
+    });
+  </script>
+@endif
