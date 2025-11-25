@@ -6,18 +6,19 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Models\Category;
-
+use App\Models\Product;
 // Admin Login
 Route::get('/admin/login', [AdminAuthController::class, 'loginPage'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
 
 // Admin Protected Area
 Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
-    Route::get('/dashboard', function () {
-    $categories = Category::all();
-    $category = null;
-    return view('admin.admin-panel', compact('categories', 'category'));
-    });
+    // Route::get('/dashboard', function () {
+    // $categories = Category::all();
+    // $products = Product::with('category')->latest()->get();
+    // $category = null;
+    // return view('admin.admin-panel', compact('categories', 'category','products'));
+    // });
 
     Route::get('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
@@ -34,6 +35,10 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
      Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
       Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
+     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])
+    ->name('admin.products.edit');
+     Route::delete('/products/{product}', [ProductController::class, 'destroy'])
+    ->name('admin.products.destroy');
 
 });
 

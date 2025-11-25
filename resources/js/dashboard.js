@@ -139,17 +139,28 @@
 
         
 
-       window.addSpecification = function addSpecification() {
-            const container = document.querySelector('.space-y-3');
-            const newSpec = document.createElement('div');
-            newSpec.className = 'flex space-x-2';
-            newSpec.innerHTML = `
-                <input type="text" name="specification_name[]" placeholder="Specification name" class="flex-1 border border-gray-300 rounded-lg px-3 py-2">
-            <input type="text" name="specification_value[]" placeholder="Value" class="flex-1 border border-gray-300 rounded-lg px-3 py-2">
-            <button type="button" onclick="this.closest('.spec-row').remove()" class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">Delete</button>
-            `;
-            container.insertBefore(newSpec, container.lastElementChild);
-        }
+      window.addSpecification = function () {
+   const container = document.getElementById('specifications-wrapper');
+
+    
+    const newSpec = document.createElement('div');
+    newSpec.className = 'spec-row flex space-x-2';   
+
+    newSpec.innerHTML = `
+        <input type="text" name="specification_name[]" placeholder="Specification name"
+            class="flex-1 border border-gray-300 rounded-lg px-3 py-2">
+
+        <input type="text" name="specification_value[]" placeholder="Value"
+            class="flex-1 border border-gray-300 rounded-lg px-3 py-2">
+
+        <button type="button" onclick="this.closest('.spec-row').remove()" 
+            class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">
+            Delete
+        </button>
+    `;
+
+    container.appendChild(newSpec);  
+}
 
         // Order Management Functions
         function showOrdersList() {

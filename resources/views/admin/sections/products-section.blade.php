@@ -6,17 +6,17 @@
        <h3 class="text-lg font-semibold text-gray-800">Products Management</h3>
        <div class="flex space-x-3">
         <form method="GET" action="{{ route('admin.products.index') }}">
-            <select name="category" onchange="this.form.submit()" 
+            <select name="category_id" onchange="this.form.submit()" 
             class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
 
         <option value="">All Categories</option>
 
-        @foreach ($categories as $category)
-            <option value="{{ $category->id }}" 
-                {{ request('category') == $category->id ? 'selected' : '' }}>
-                {{ $category->name }}
-            </option>
-        @endforeach
+         @foreach ($categories as $category)
+        <option value="{{ $category->id }}"
+            {{ request('category_id') == $category->id ? 'selected' : '' }}>
+            {{ $category->name }}
+        </option>
+    @endforeach
     </select>
 </form>
 
@@ -27,36 +27,37 @@
      </div>
      <div class="p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+         @foreach ($products as $product)
        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
         <div class="bg-gray-200 h-32 rounded-lg mb-4 flex items-center justify-center">
-         📱 Product Image
+    @if (!empty($product->images) && isset($product->images[0]))
+            <img src="{{ asset('uploads/products/' . $product->images[0]) }}" class="h-full w-full object-cover rounded-lg">
+        @else
+            <span class="text-gray-500">No image</span>
+        @endif
         </div>
-        <h4 class="font-semibold text-gray-800 mb-2">Smartphone XYZ</h4>
-        <p class="text-gray-600 text-sm mb-2">Electronics • Stock: 25</p>
-        <p class="text-lg font-bold text-gray-800 mb-3">$299.99</p>
-        <div class="flex space-x-2"><button onclick="editProduct('smartphone')" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors">Edit</button> <button onclick="deleteProduct('smartphone')" class="flex-1 bg-red-600 text-white py-2 px-3 rounded text-sm hover:bg-red-700 transition-colors">Delete</button>
-        </div>
-       </div>
-       <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-        <div class="bg-gray-200 h-32 rounded-lg mb-4 flex items-center justify-center">
-         👕 Product Image
-        </div>
-        <h4 class="font-semibold text-gray-800 mb-2">Cotton T-Shirt</h4>
-        <p class="text-gray-600 text-sm mb-2">Clothing • Stock: 150</p>
-        <p class="text-lg font-bold text-gray-800 mb-3">$24.99</p>
-        <div class="flex space-x-2"><button onclick="editProduct('tshirt')" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors">Edit</button> <button onclick="deleteProduct('tshirt')" class="flex-1 bg-red-600 text-white py-2 px-3 rounded text-sm hover:bg-red-700 transition-colors">Delete</button>
-        </div>
-       </div>
-       <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-        <div class="bg-gray-200 h-32 rounded-lg mb-4 flex items-center justify-center">
-         📚 Product Image
-        </div>
-        <h4 class="font-semibold text-gray-800 mb-2">Programming Book</h4>
-        <p class="text-gray-600 text-sm mb-2">Books • Stock: 8</p>
-        <p class="text-lg font-bold text-gray-800 mb-3">$39.99</p>
-        <div class="flex space-x-2"><button onclick="editProduct('book')" class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors">Edit</button> <button onclick="deleteProduct('book')" class="flex-1 bg-red-600 text-white py-2 px-3 rounded text-sm hover:bg-red-700 transition-colors">Delete</button>
+        <h4 class="font-semibold text-gray-800 mb-2"> {{ $product->name }}</h4>
+        <p class="text-gray-600 text-sm mb-2"> {{ $product->category->name ?? 'No Category' }} • Stock: {{ $product->stock_quantity ?? 0 }}</p>
+        <p class="text-lg font-bold text-gray-800 mb-3">${{ number_format($product->price, 2) }}</p>
+        <div class="flex space-x-2">
+           <a href="{{ route('admin.products.edit', $product->id) }}"
+                   class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors">
+                    Edit
+                </a>
+            <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="flex-1">
+                    @csrf
+                    @method('DELETE')
+                    <button
+                        class="w-full bg-red-600 text-white py-2 px-3 rounded text-sm hover:bg-red-700 transition-colors"
+                        onclick="return confirm('Are you sure you want to delete this product?')"
+                    >
+                        Delete
+                    </button>
+                </form>
         </div>
        </div>
+         @endforeach  
+       
       </div>
      </div>
     </div><!-- Add/Edit Product Form -->
@@ -97,21 +98,25 @@
        </div><!-- Right Column -->
        <div class="space-y-6">
          <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
-         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-          <div id="imagePreview" class="mb-4">
-           <div class="w-32 h-32 mx-auto bg-linear-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center text-white text-6xl">
-            📱
-           </div>
-          </div>
-          <div class="mt-4"><label class="cursor-pointer">
-             <span class="mt-2 block text-sm font-medium text-gray-900">Upload category image</span>
-               <input type="file" name="images[]" multiple accept="image/*" class="sr-only" onchange="previewProductImage(event)"> </label>
-           <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
-           
-          </div>
-         </div>
-        </div>
+  <label class="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
+
+  <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+
+    <!-- PREVIEW CONTAINER -->
+    <div id="imagePreview" class="mb-4 flex gap-4 overflow-x-auto"></div>
+
+    <div class="mt-4">
+      <label class="cursor-pointer">
+        
+        <span class="mt-2 block text-sm font-medium text-gray-900">Upload product images</span>
+        <input type="file" name="images[]" multiple accept="image/*" class="sr-only" onchange="previewProductImage(event)">
+      </label>
+      <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+    </div>
+
+  </div>
+</div>
+
         <div><label class="block text-sm font-medium text-gray-700 mb-2">Product Specifications</label>
          <div class="space-y-3">
           <div class="flex space-x-2">

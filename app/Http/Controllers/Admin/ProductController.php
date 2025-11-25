@@ -10,20 +10,20 @@ use App\Models\Category;
 
 class ProductController extends Controller
 {
-     public function index(Request $request)
+    public function index(Request $request)
 {
     $categories = Category::all();
 
-    $products = Product::query();
-
-    if ($request->has('category') && $request->category !== '') {
-        $products->where('category_id', $request->category);
-    }
+    $products = Product::with('category');  
+    if ($request->filled('category_id')) {
+    $products->where('category_id', $request->category_id);
+}
 
     $products = $products->latest()->get();
 
     return view('admin.admin-panel', compact('products', 'categories'));
 }
+
 
   public function create()
     {
