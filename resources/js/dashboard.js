@@ -96,48 +96,16 @@
             document.getElementById('productsListView').classList.remove('hidden');
         }
 
-        function editProduct(productId) {
-            showAddProduct();
-            document.querySelector('#addProductView h3').textContent = 'Edit Product';
-            
-            // Simulate loading product data
-            const productData = {
-                'smartphone': { name: 'Smartphone XYZ', price: '299.99', stock: '25', category: 'electronics' },
-                'tshirt': { name: 'Cotton T-Shirt', price: '24.99', stock: '150', category: 'clothing' },
-                'book': { name: 'Programming Book', price: '39.99', stock: '8', category: 'books' }
-            };
-            
-            const product = productData[productId];
-            if (product) {
-                document.getElementById('productName').value = product.name;
-                document.getElementById('productPrice').value = product.price;
-                document.getElementById('productStock').value = product.stock;
-                document.getElementById('productCategory').value = product.category;
-            }
-        }
+          window.showEditProduct = function showEditProduct() {
+    document.getElementById('productsListView').classList.add('hidden');
+    document.getElementById('addProductView').classList.add('hidden');
+    document.getElementById('editProductView').classList.remove('hidden');
 
-        function deleteProduct(productId) {
-            // Create inline confirmation
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = 'Confirm Delete?';
-            button.classList.remove('bg-red-600', 'hover:bg-red-700');
-            button.classList.add('bg-red-800');
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('bg-red-800');
-                button.classList.add('bg-red-600', 'hover:bg-red-700');
-            }, 3000);
-            
-            // Simulate delete after confirmation
-            button.onclick = () => {
-                showToast('Product deleted successfully!', 'success');
-                button.closest('.border').style.opacity = '0.5';
-            };
-        }
 
-        
+    const title = document.querySelector('#editProductView h3');
+    if (title) title.textContent = 'Edit Product';
+}
+     
 
       window.addSpecification = function () {
    const container = document.getElementById('specifications-wrapper');
@@ -161,6 +129,11 @@
 
     container.appendChild(newSpec);  
 }
+
+
+
+
+
 
         // Order Management Functions
         function showOrdersList() {
@@ -308,6 +281,30 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit(); // submit the form if confirmed
+                }
+            });
+        });
+    });
+});
+
+ document.addEventListener('DOMContentLoaded', function () {
+    const forms = document.querySelectorAll('.delete-product-form');
+
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); 
                 }
             });
         });

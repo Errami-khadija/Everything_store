@@ -17,7 +17,7 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     // $categories = Category::all();
     // $products = Product::with('category')->latest()->get();
     // $category = null;
-    // return view('admin.admin-panel', compact('categories', 'category','products'));
+    // return view('admin.admin-panel');
     // });
 
     Route::get('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
@@ -32,13 +32,13 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update'])
     ->name('admin.categories.update');
 
-     Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
-      Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
+    Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
-     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])
-    ->name('admin.products.edit');
-     Route::delete('/products/{product}', [ProductController::class, 'destroy'])
-    ->name('admin.products.destroy');
+    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
+
 
 });
 

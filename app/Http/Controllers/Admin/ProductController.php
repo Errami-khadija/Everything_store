@@ -80,4 +80,62 @@ class ProductController extends Controller
 
     return redirect()->back()->with('success', 'Product added successfully!');
 }
+
+public function edit($id)
+{
+    $products = Product::all();
+    $selectedProduct = Product::findOrFail($id);
+    $categories = Category::all();
+
+    return view('admin.admin-panel', compact('products','selectedProduct' , 'categories'));
+}
+
+
+public function update(Request $request, $id)
+{
+    $product = Product::findOrFail($id);
+
+    $request->validate([
+        'name' => 'required',
+        'price' => 'required|numeric',
+        'category_id' => 'required',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+    ]);
+
+    $product->name = $request->name;
+    $product->price = $request->price;
+    $product->category_id = $request->category_id;
+    $product->description = $request->description;
+
+    // Handle image update
+    if ($request->hasFile('image')) {
+        if ($product->image && file_exists(public_path('uploads/products/' . $product->image))) {
+            unlink(public_path('uploads/products/' . $product->image));
+        }
+
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('uploads/products'), $imageName);
+        $product->image = $imageName;
+    }
+
+    $product->save();
+
+    return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
+}
+
+
+public function destroy($id)
+{
+    $product = Product::findOrFail($id);
+
+    // If product has image, delete it from storage (optional)
+    if ($product->image && file_exists(public_path('uploads/products/' . $product->image))) {
+        unlink(public_path('uploads/products/' . $product->image));
+    }
+
+    $product->delete();
+
+    return redirect()->back()->with('success', 'Product deleted successfully!');
+}
+
 }

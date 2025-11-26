@@ -40,16 +40,16 @@
         <p class="text-gray-600 text-sm mb-2"> {{ $product->category->name ?? 'No Category' }} • Stock: {{ $product->stock_quantity ?? 0 }}</p>
         <p class="text-lg font-bold text-gray-800 mb-3">${{ number_format($product->price, 2) }}</p>
         <div class="flex space-x-2">
-           <a href="{{ route('admin.products.edit', $product->id) }}"
-                   class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors">
-                    Edit
-                </a>
-            <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="flex-1">
+          <a href="{{ route('admin.products.edit', $product->id) }}" 
+               class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors text-center">
+              Edit
+            </a>
+            <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="delete-product-form flex-1">
                     @csrf
                     @method('DELETE')
                     <button
                         class="w-full bg-red-600 text-white py-2 px-3 rounded text-sm hover:bg-red-700 transition-colors"
-                        onclick="return confirm('Are you sure you want to delete this product?')"
+                      data-id="{{ $product->id }}"
                     >
                         Delete
                     </button>
@@ -60,7 +60,7 @@
        
       </div>
      </div>
-    </div><!-- Add/Edit Product Form -->
+    </div><!-- Add Product Form -->
     <div id="addProductView" class="bg-white rounded-xl shadow-sm hidden">
      <div class="p-6 border-b border-gray-200">
       <div class="flex items-center justify-between">
@@ -145,5 +145,105 @@
         <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"> Save Product </button>
       </div>
      </form>
+  
     </div>
+
+    <!-- Edit Product Form -->
+   <div id="editProductView" class="bg-white rounded-xl shadow-sm hidden">
+     @if(isset($selectedProduct))
+
+    <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-gray-800">Edit Product</h3>
+        <a href="{{ route('admin.products.index') }}" class="text-gray-600 hover:text-gray-800">
+            ✕
+        </a>
+    </div>
+
+    <form action="{{ route('admin.products.update', $selectedProduct->id) }}"
+          method="POST"
+          enctype="multipart/form-data"
+          class="p-6">
+        @csrf
+        @method('PUT')
+
+        <input type="hidden" name="id" value="{{ $selectedProduct->id }}">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Left -->
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Product Name *</label>
+                    <input type="text" name="name" value="{{ $selectedProduct->name }}" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea name="description" value="{{ $selectedProduct->description }}"
+                        rows="4"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Price *</label>
+                        <input type="number" name="price" value="{{ $selectedProduct->price }}" step="0.01"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Stock *</label>
+                        <input type="number" name="stock_quantity" value="{{ $selectedProduct->stock_quantity }}"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                    <select name="category_id"value="{{ $selectedProduct->category_id }}"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                        @foreach ($categories as $category)
+                            <option value="{{ $selectedProduct->category_id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <!-- Right -->
+            <div class="space-y-6">
+
+                <!-- Preview -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
+                    <div class="bg-gray-200 h-32 rounded-lg mb-4 flex items-center justify-center">
+                     <img src="{{ asset('uploads/products/' . $selectedProduct->images[0]) }}" class="h-full w-full object-cover rounded-lg">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Upload New Images</label>
+                    <input type="file" name="images[]" multiple class="bg-gray-100 border p-2 rounded-lg">
+                </div>
+
+            </div>
+
+        </div>
+
+        <button type="submit"
+            class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+            Update Product
+        </button>
+      </div>
+    </form>
+ @endif
+
+</div>
+
    </section>
+ @if (isset($selectedProduct))
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        showEditProduct();
+    });
+  </script>
+@endif
