@@ -97,27 +97,48 @@ public function update(Request $request, $id)
 
     $request->validate([
         'name' => 'required',
+        'description' => 'nullable|string',
         'price' => 'required|numeric',
+        'stock_quantity' => 'required|integer|min:0',
         'category_id' => 'required',
+        'status' => 'required|in:active,draft,inactive',
         'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+
     ]);
 
     $product->name = $request->name;
     $product->price = $request->price;
+    $product->stock_quantity = $request->stock_quantity;
     $product->category_id = $request->category_id;
     $product->description = $request->description;
+    $product->status = $request->status;
 
-    // Handle image update
-    if ($request->hasFile('image')) {
-        if ($product->image && file_exists(public_path('uploads/products/' . $product->image))) {
-            unlink(public_path('uploads/products/' . $product->image));
+   // Handle multiple images update
+if ($request->hasFile('images')) {
+
+    // Delete old images
+    if (!empty($product->images)) {
+        foreach ($product->images as $oldImage) {
+            $path = public_path('uploads/products/' . $oldImage);
+            if (file_exists($path)) {
+                unlink($path);
+            }
         }
-
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('uploads/products'), $imageName);
-        $product->image = $imageName;
     }
 
+    $newImageNames = [];
+
+    foreach ($request->file('images') as $file) {
+        $imageName = time() . '_' . uniqid() . '.' . $file->extension();
+        $file->move(public_path('uploads/products'), $imageName);
+        $newImageNames[] = $imageName;
+    }
+
+    // Save images as array (assuming images column is JSON)
+    $product->images = $newImageNames;
+}
+
+  
     $product->save();
 
     return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');

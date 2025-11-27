@@ -37,6 +37,10 @@
         @endif
         </div>
         <h4 class="font-semibold text-gray-800 mb-2"> {{ $product->name }}</h4>
+        <p class="text-sm mb-2 {{ $product->status === 'active' ? 'text-green-600' : 'text-red-600' }}">
+          {{ ucfirst($product->status) }}
+         </p>
+
         <p class="text-gray-600 text-sm mb-2"> {{ $product->category->name ?? 'No Category' }} • Stock: {{ $product->stock_quantity ?? 0 }}</p>
         <p class="text-lg font-bold text-gray-800 mb-3">${{ number_format($product->price, 2) }}</p>
         <div class="flex space-x-2">
@@ -179,9 +183,9 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                    <textarea name="description" value="{{ $selectedProduct->description }}"
+                    <textarea name="description" 
                         rows="4"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2"></textarea>
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2">{{ $selectedProduct->description }}</textarea>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -200,12 +204,18 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                    <select name="category_id"value="{{ $selectedProduct->category_id }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                        @foreach ($categories as $category)
-                            <option value="{{ $selectedProduct->category_id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
+                    <select name="category_id"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2">
+
+    @foreach ($categories as $category)
+        <option value="{{ $category->id }}"
+            {{ $selectedProduct->category_id == $category->id ? 'selected' : '' }}>
+            {{ $category->name }}
+        </option>
+    @endforeach
+
+</select>
+
                 </div>
             </div>
 
@@ -213,17 +223,62 @@
             <div class="space-y-6">
 
                 <!-- Preview -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
-                    <div class="bg-gray-200 h-32 rounded-lg mb-4 flex items-center justify-center">
-                     <img src="{{ asset('uploads/products/' . $selectedProduct->images[0]) }}" class="h-full w-full object-cover rounded-lg">
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
+
+            <div class="grid grid-cols-3 gap-4 mb-4">
+                @foreach ($selectedProduct->images as $image)
+                    <div class="bg-gray-200 h-32 rounded-lg overflow-hidden">
+                        <img src="{{ asset('uploads/products/' . $image) }}"
+                             class="h-full w-full object-cover">
                     </div>
-                </div>
+                @endforeach
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Upload New Images</label>
+            <input type="file" name="images[]" multiple class="bg-gray-100 border p-2 rounded-lg">
+        </div>
+     </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Product Specifications</label>
+            <div class="space-y-3" id="specifications-wrapper-edit">
+                @foreach ($selectedProduct->specifications as $specification)
+                    <div class="flex space-x-2 spec-row mb-2">
+                        <input type="text" name="specification_name[]" value="{{ $specification['name'] }}"
+                               class="flex-1 border border-gray-300 rounded-lg px-3 py-2">
+                        <input type="text" name="specification_value[]" value="{{ $specification['value'] }}"
+                               class="flex-1 border border-gray-300 rounded-lg px-3 py-2">
+                        <button type="button" onclick="this.closest('.spec-row').remove()"
+                                class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">Delete</button>
+                    </div>
+                @endforeach
+            </div>
+            <button type="button" onclick="addSpecificationEdit()"
+                    class="text-blue-600 hover:text-blue-800 text-sm font-medium">+ Add Specification</button>
+        </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Upload New Images</label>
-                    <input type="file" name="images[]" multiple class="bg-gray-100 border p-2 rounded-lg">
-                </div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Product Status</label>
+                    <div class="space-y-2">
+                        <label>
+                            <input type="radio" name="status" value="active"
+                                {{ $selectedProduct->status === 'active' ? 'checked' : '' }}>
+                            Active
+                        </label>
+                        <label>
+                            <input type="radio" name="status" value="draft"
+                                {{ $selectedProduct->status === 'draft' ? 'checked' : '' }}>
+                            Draft
+                        </label>
+                        <label>
+                            <input type="radio" name="status" value="inactive"
+                                {{ $selectedProduct->status === 'inactive' ? 'checked' : '' }}>
+                            Inactive
+                        </label>
+                    </div>
 
             </div>
 
