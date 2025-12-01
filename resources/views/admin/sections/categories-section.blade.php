@@ -1,5 +1,9 @@
+@extends('admin.layout')
+
+@section('content')
+
 <!-- Categories Section -->
-   <section id="categoriesSection" class="p-6 fade-in hidden"><!-- Categories List View -->
+   <section id="categoriesSection" class="p-6 fade-in "><!-- Categories List View -->
     <div id="categoriesListView" class="bg-white rounded-xl shadow-sm">
      <div class="p-6 border-b border-gray-200">
       <div class="flex items-center justify-between">
@@ -16,7 +20,7 @@
     <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
 
         {{-- CATEGORY IMAGE --}}
-        <div class="h-32 rounded-lg mb-4 bg-cover bg-center"
+        <div class="h-60 rounded-lg mb-4 bg-cover bg-center"
              style="background-image: url('{{ asset('storage/' . $category->image) }}');">
         </div>
 
@@ -86,9 +90,11 @@
             📱
            </div>
           </div>
-          <div class="mt-4"><label class="cursor-pointer">
+          <div class="mt-4">
+            <label class="cursor-pointer">
              <span class="mt-2 block text-sm font-medium text-gray-900">Upload category image</span>
-              <input type="file" name="image" class="sr-only" accept="image/*" onchange="previewCategoryImage(event)"> </label>
+              <input type="file" name="image" class="sr-only" accept="image/*" onchange="previewCategoryImage(event)"> 
+            </label>
            <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
            
           </div>
@@ -170,11 +176,20 @@
 
                     <img src="{{ asset('storage/' . $selectedCategory->image) }}"
                          class="w-32 h-32 object-cover rounded-lg mb-3">
+                  <div class="border-2 border-gray-400 border-dashed p-4 rounded-lg text-center">
+                    <label class="cursor-pointer">
+                        <span class="mt-2 block text-sm font-medium text-gray-900 p-5 ">Replace images</span>
+                        <input type="file" name="image" accept="image/*" class="sr-only">
+                    </label>
+                     <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
 
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Replace Image</label>
-                    <input type="file" name="image" class="border rounded px-3 py-2 w-full">
+                    
                 </div>
-            </div>
+
+               </div>
+     </div>
+
+        
 
             <!-- Right column -->
             <div class="space-y-6">
@@ -208,7 +223,9 @@
                 </div>
 
             </div>
-        </div>
+       </div>
+     
+
 
         <!-- Buttons -->
         <div class="flex justify-end space-x-4 border-t pt-6 mt-6">
@@ -220,12 +237,14 @@
                 Update Category
             </button>
         </div>
+
     </form>
     @endif
 
 </div>
 
-   </section>
+</section>
+ @endsection
 
 @if (isset($selectedCategory))
   <script>

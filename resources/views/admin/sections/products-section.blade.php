@@ -1,5 +1,9 @@
+@extends('admin.layout')
+
+@section('content')
+
 <!-- Products Section -->
-   <section id="productsSection" class="p-6 fade-in hidden"><!-- Products List View -->
+   <section id="productsSection" class="p-6 fade-in"><!-- Products List View -->
     <div id="productsListView" class="bg-white rounded-xl shadow-sm">
      <div class="p-6 border-b border-gray-200">
       <div class="flex items-center justify-between">
@@ -29,7 +33,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
          @foreach ($products as $product)
        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-        <div class="bg-gray-200 h-32 rounded-lg mb-4 flex items-center justify-center">
+        <div class="bg-gray-200 h-60 rounded-lg mb-4 flex items-center justify-center">
     @if (!empty($product->images) && isset($product->images[0]))
             <img src="{{ asset('uploads/products/' . $product->images[0]) }}" class="h-full w-full object-cover rounded-lg">
         @else
@@ -226,7 +230,7 @@
   <div>
     <label class="block text-sm font-medium text-gray-700 mb-2">Current Images</label>
 
-            <div class="grid grid-cols-3 gap-4 mb-4">
+            <div id="previewEditedImages" class="grid grid-cols-3 gap-4 mb-4">
                 @foreach ($selectedProduct->images as $image)
                     <div class="bg-gray-200 h-32 rounded-lg overflow-hidden">
                         <img src="{{ asset('uploads/products/' . $image) }}"
@@ -234,12 +238,15 @@
                     </div>
                 @endforeach
             </div>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Upload New Images</label>
-            <input type="file" name="images[]" multiple class="bg-gray-100 border p-2 rounded-lg">
-        </div>
+  
+    <div class="border-2 border-gray-400 border-dashed p-4 rounded-lg text-center">
+      <label class="cursor-pointer"> 
+        <span class="mt-2 block text-sm font-medium text-gray-900 p-5 ">Upload product images</span>
+        <input type="file" name="images[]" multiple accept="image/*" class="sr-only"  onchange="previewEditedImages(event)">
+      </label>
+      <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+    </div>
+    
      </div>
 
         <div>
@@ -255,9 +262,10 @@
                                 class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">Delete</button>
                     </div>
                 @endforeach
-            </div>
-            <button type="button" onclick="addSpecificationEdit()"
+                  <button type="button" onclick="addSpecificationEdit()"
                     class="text-blue-600 hover:text-blue-800 text-sm font-medium">+ Add Specification</button>
+            </div>
+          
         </div>
 
                 <div>
@@ -294,7 +302,8 @@
 
 </div>
 
-   </section>
+</section> 
+ @endsection
  @if (isset($selectedProduct))
   <script>
     document.addEventListener('DOMContentLoaded', function () {

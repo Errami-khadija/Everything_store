@@ -349,6 +349,62 @@
     });
 }
 
+window.previewEditedImages = function(event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById('previewEditedImages');
+
+    // Remove old previews (optional)
+    previewContainer.innerHTML = '';
+
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            // Wrapper, same style as existing ones
+            const box = document.createElement('div');
+            box.className = "bg-gray-200 h-32 rounded-lg overflow-hidden";
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = "h-full w-full object-cover";
+
+            box.appendChild(img);
+            previewContainer.appendChild(box);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+window.addSpecificationEdit = function addSpecificationEdit() {
+    const container = document.getElementById("specifications-wrapper-edit");
+
+    // Create wrapper div
+    const row = document.createElement("div");
+    row.className = "flex gap-3 mb-3 items-center";
+
+    row.innerHTML = `
+        <input 
+            type="text" 
+            name="specification_name[]" 
+            class="w-1/2 border border-gray-300 p-2 rounded" 
+            placeholder="Specification name">
+
+        <input 
+            type="text" 
+            name="specification_value[]" 
+            class="w-1/2 border border-gray-300 p-2 rounded" 
+            placeholder="Specification value">
+
+        <button type="button"  onclick="this.parentElement.remove()"
+                class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">Delete</button>
+    `;
+
+    container.appendChild(row);
+}
+
+
         // Toast notification system
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');

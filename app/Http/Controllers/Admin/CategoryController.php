@@ -13,12 +13,12 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
         $category = null; 
-        return view('admin.admin-panel', compact('categories', 'category'));
+        return view('admin.sections.categories-section', compact('categories', 'category'));
     }
     public function create()
     {
        $category = null;
-    return view('admin.admin-panel', compact('category'));
+    return view('admin.sections.categories-section', compact('category'));
     }
 
     public function store(Request $request)
@@ -52,7 +52,7 @@ class CategoryController extends Controller
 {
     $categories = Category::all(); 
 
-    return view('admin.admin-panel', [
+    return view('admin.sections.categories-section', [
         'categories' => $categories,
         'selectedCategory' => $category   
     ]);

@@ -21,14 +21,14 @@ class ProductController extends Controller
 
     $products = $products->latest()->get();
 
-    return view('admin.admin-panel', compact('products', 'categories'));
+    return view('admin.sections.products-section', compact('products', 'categories'));
 }
 
 
   public function create()
     {
         $categories = Category::all();
-        return view('admin.admin-panel', compact('categories'));
+        return view('admin.sections.products-section', compact('categories'));
     }
 
    public function store(Request $request)
@@ -87,7 +87,7 @@ public function edit($id)
     $selectedProduct = Product::findOrFail($id);
     $categories = Category::all();
 
-    return view('admin.admin-panel', compact('products','selectedProduct' , 'categories'));
+    return view('admin.sections.products-section', compact('products','selectedProduct' , 'categories'));
 }
 
 
@@ -137,6 +137,23 @@ if ($request->hasFile('images')) {
     // Save images as array (assuming images column is JSON)
     $product->images = $newImageNames;
 }
+
+// ----------- Specifications -----------
+    $keys = $request->specification_name ?? [];
+    $values = $request->specification_value ?? [];
+
+    $specifications = [];
+
+    for ($i = 0; $i < count($keys); $i++) {
+        if (!empty($keys[$i]) && !empty($values[$i])) {
+            $specifications[] =  [
+                'name'=>$keys[$i],
+                'value'=>$values[$i]
+            ];
+        }
+    }
+
+    $product->specifications = $specifications; 
 
   
     $product->save();
