@@ -125,6 +125,31 @@
   </div>
 </div>
 
+<div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Product Tags</label>
+
+    <div class="flex items-center space-x-4">
+
+        <!-- New checkbox -->
+        <label class="inline-flex items-center">
+            <input type="checkbox" name="flags[]" value="new"
+                   class="rounded border-gray-300 text-blue-600"
+                   @if(!empty($product) && in_array('new', $product->flags ?? [])) checked @endif>
+            <span class="ml-2">New</span>
+        </label>
+
+        <!-- Featured checkbox -->
+        <label class="inline-flex items-center">
+            <input type="checkbox" name="flags[]" value="featured"
+                   class="rounded border-gray-300 text-blue-600"
+                   @if(!empty($product) && in_array('featured', $product->flags ?? [])) checked @endif>
+            <span class="ml-2">Featured</span>
+        </label>
+
+    </div>
+</div>
+
+
         <div><label class="block text-sm font-medium text-gray-700 mb-2">Product Specifications</label>
          <div class="space-y-3">
           <div class="flex space-x-2">

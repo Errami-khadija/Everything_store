@@ -1,0 +1,47 @@
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      height: 100%;
+    }
+    
+    html {
+      height: 100%;
+    }
+    
+    .product-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+    
+    .category-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    
+    .category-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-link {
+      transition: opacity 0.2s;
+    }
+    
+    .nav-link:hover {
+      opacity: 0.7;
+    }
+    
+    .show-more-link {
+      transition: opacity 0.2s;
+    }
+    
+    .show-more-link:hover {
+      opacity: 0.8;
+    }
+@view-transition { navigation: auto; }

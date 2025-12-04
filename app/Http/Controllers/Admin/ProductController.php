@@ -41,6 +41,9 @@ class ProductController extends Controller
         'category_id' => 'required|exists:categories,id',
         'status' => 'required|in:active,draft,inactive',
         'images.*' => 'image|max:10240',
+        'flags' => 'array',
+        'flags.*' => 'in:new,featured',
+
     ]);
 
     // Handle images
@@ -75,7 +78,8 @@ class ProductController extends Controller
         'category_id' => $request->category_id,
         'images' => $imagePaths,
         'specifications' => $specs,
-        'status' => $request->status
+        'status' => $request->status,
+        'flags' => $request->flags ?? [],
     ]);
 
     return redirect()->back()->with('success', 'Product added successfully!');

@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Models\Category;
 use App\Models\Product;
+
+use App\Http\Controllers\HomeController;
 // Admin Login
 Route::get('/admin/login', [AdminAuthController::class, 'loginPage'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
@@ -42,7 +44,5 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
 
 });
 
-Route::get('/', function () {
-    return view('shop.shop'); 
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
