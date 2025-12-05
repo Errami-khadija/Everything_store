@@ -107,7 +107,9 @@ public function update(Request $request, $id)
         'category_id' => 'required',
         'status' => 'required|in:active,draft,inactive',
         'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-
+        'flags' => 'array',
+        'flags.*' => 'in:new,featured',
+        
     ]);
 
     $product->name = $request->name;
@@ -116,6 +118,7 @@ public function update(Request $request, $id)
     $product->category_id = $request->category_id;
     $product->description = $request->description;
     $product->status = $request->status;
+    $product->flags = $request->flags ?? [];
 
    // Handle multiple images update
 if ($request->hasFile('images')) {

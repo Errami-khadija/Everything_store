@@ -1,52 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Everything Store</title>
-  <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-   @vite(['resources/css/shop.css'])
- 
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
- </head>
- <body>
-  <div id="app" class="min-h-full flex flex-col w-full"><!-- Header -->
-   <header id="header" class="sticky top-0 z-50 shadow-md w-full">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-     <div class="flex items-center justify-between">
-      <div>
-       <h1 id="store-name" class="text-3xl font-bold">Everything Store</h1>
-       <p id="store-tagline" class="text-sm mt-1">Your one-stop shop for everything</p>
-      </div><button id="cart-btn" class="relative p-3 rounded-full transition-colors">
-       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-       </svg><span id="cart-count" class="absolute -top-1 -right-1 text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span> </button>
-     </div><!-- Search Bar -->
-     <div class="mt-4">
-      <div class="relative"><input type="text" id="search-input" placeholder="Search products..." class="w-full px-4 py-3 pl-12 rounded-lg border-2 focus:outline-none focus:border-opacity-80 transition-colors">
-       <svg class="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-       </svg>
-      </div>
-     </div>
-    </div><!-- Navigation Bar -->
-    <nav id="nav-bar" class="border-t w-full">
-     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-center gap-8 py-3 flex-wrap"><a href="#home" class="nav-link font-medium">Home</a> <a href="#categories" class="nav-link font-medium">Categories</a> <a href="#featured" class="nav-link font-medium">Featured</a> <a href="#products" class="nav-link font-medium">All Products</a> <a href="#about" class="nav-link font-medium">About</a> <a href="#contact" class="nav-link font-medium">Contact</a>
-      </div>
-     </div>
-    </nav>
-   </header><!-- Main Content -->
-   <main class="flex-1 w-full"><!-- Hero Section -->
-    <section id="hero" class="py-20 w-full">
-     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="text-8xl mb-6">
-       🛍️✨🎉
-      </div>
-      <h1 id="hero-title" class="text-5xl font-bold mb-4">Welcome to Everything Store</h1>
-      <p id="hero-subtitle" class="text-xl mb-8 opacity-80">Discover amazing products at unbeatable prices</p><button id="hero-button" class="px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg hover:shadow-xl"> <span id="hero-button-text">Shop Now</span> </button>
-     </div>
-    </section><!-- Categories Section -->
-    <section id="categories" class="py-12 w-full">
+</head>
+<body class="bg-gray-100">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-50">
+    <h1 class="text-2xl font-bold text-gray-800">Everything Store</h1>
+
+    <div class="hidden md:flex space-x-6 items-center">
+      <a href="#home" class="hover:text-blue-600">Home</a>
+      <a href="#categories" class="hover:text-blue-600">Categories</a>
+      <a href="#featured" class="hover:text-blue-600">Featured</a>
+      <a href="#products" class="hover:text-blue-600">All Products</a>
+      <a href="#about" class="hover:text-blue-600">About</a>
+      <a href="#contact" class="hover:text-blue-600">Contact</a>
+      <form  method="GET">
+        <input type="text" name="query" placeholder="Search products..."
+          class="border rounded px-2 py-1" />
+      </form>
+    </div>
+
+    <button id="openCartBtn"
+      class="relative bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition md:ml-4">
+      Cart
+      <span id="cartCount"
+        class="absolute -top-2 -right-2 bg-red-500 text-xs text-white px-2 py-0.5 rounded-full">0</span>
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="bg-blue-600 text-white py-20 px-4 text-center">
+    <h2 class="text-4xl font-bold mb-4">Welcome to Everything Store</h2>
+    <p class="text-lg mb-6">Find everything you need at the best prices. Fast delivery, COD available!</p>
+    <a href="#products" class="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition">
+      Shop Now
+    </a>
+  </section>
+
+  <!-- Categories Section -->
+  <section id="categories" class="py-12 w-full">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <h2 id="categories-title" class="text-3xl font-bold mb-8 text-center">Shop by Category</h2>
@@ -78,7 +75,8 @@
 
     </div>
 </section>
-<!-- New Products Section -->
+
+ <!-- New Products Section -->
     <section id="new-products" class="py-12 w-full">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -241,7 +239,7 @@
     </div>
 </section>
 
-   </main><!-- Footer -->
+<!-- Footer -->
    <footer id="footer" class="mt-auto border-t w-full">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -273,7 +271,68 @@
      </div>
     </div>
    </footer>
+
+  <!-- Cart Popup Sidebar -->
+  <div id="cartPopup"
+    class="fixed top-0 right-0 w-80 h-full bg-white shadow-xl transform translate-x-full transition-all duration-300 z-50 flex flex-col">
+    <div class="p-4 border-b flex justify-between items-center">
+      <h2 class="text-xl font-semibold">Your Cart</h2>
+      <button onclick="closeCart()" class="text-gray-600 hover:text-black">✖</button>
+    </div>
+    <div id="cartItems" class="p-4 space-y-4 flex-1 overflow-y-auto">
+      <!-- Laravel can loop cart items here -->
+      
+      <div class="flex justify-between items-center border-b pb-2">
+        <div>
+          <p class="font-semibold">gendoura</p>
+          <p class="text-gray-600">90 dh</p>
+        </div>
+        <form method="POST">
+          @csrf
+          <button class="text-red-500">Remove</button>
+        </form>
+      </div>
+     
+    </div>
+    <div class="p-4 border-t">
+      <p class="font-semibold mb-3">90 dh</p>
+      <a href="#checkout" id="checkoutBtn" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded inline-block text-center">
+        Checkout (COD)
+      </a>
+    </div>
   </div>
-   @vite(['resources/js/shop.js'])
+
+  <!-- Checkout Form Popup -->
+  <div id="checkoutPopup"
+    class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex justify-center items-center p-4">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md">
+      <h2 class="text-xl font-semibold mb-4">Checkout (Cash on Delivery)</h2>
+      <form  method="POST" class="space-y-3">
+        @csrf
+        <input type="text" name="name" placeholder="Full Name" required class="w-full border p-2 rounded" />
+        <input type="text" name="phone" placeholder="Phone Number" required class="w-full border p-2 rounded" />
+        <input type="text" name="city" placeholder="City" required class="w-full border p-2 rounded" />
+        <textarea name="address" placeholder="Address" required class="w-full border p-2 rounded"></textarea>
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">Place Order</button>
+        <button type="button" onclick="closeCheckout()" class="w-full bg-gray-300 hover:bg-gray-400 py-2 rounded">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+
+<script>
+    document.getElementById("openCartBtn").onclick = () => {
+      document.getElementById("cartPopup").classList.remove("translate-x-full");
+    };
+    function closeCart() {
+      document.getElementById("cartPopup").classList.add("translate-x-full");
+    }
+    document.getElementById("checkoutBtn")?.addEventListener("click", () => {
+      document.getElementById("checkoutPopup").classList.remove("hidden");
+    });
+    function closeCheckout() {
+      document.getElementById("checkoutPopup").classList.add("hidden");
+    }
+  </script>
 </body>
 </html>

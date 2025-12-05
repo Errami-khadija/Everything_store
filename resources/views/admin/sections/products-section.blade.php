@@ -293,6 +293,33 @@
           
         </div>
 
+        <div>
+    <label class="block text-sm font-medium text-gray-700 mb-2">Product Flags</label>
+
+    <div class="space-y-2">
+
+        <label class="flex items-center space-x-2">
+            <input 
+                type="checkbox" 
+                name="flags[]" 
+                value="new"
+                {{ in_array('new', $selectedProduct->flags ?? []) ? 'checked' : '' }}>
+            <span>New</span>
+        </label>
+
+        <label class="flex items-center space-x-2">
+            <input 
+                type="checkbox" 
+                name="flags[]" 
+                value="featured"
+                {{ in_array('featured', $selectedProduct->flags ?? []) ? 'checked' : '' }}>
+            <span>Featured</span>
+        </label>
+
+    </div>
+</div>
+
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Product Status</label>
                     <div class="space-y-2">
