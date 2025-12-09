@@ -113,7 +113,8 @@
                         {{-- Price + Add To Cart button --}}
                         <div class="flex items-center justify-between">
                             <span class="text-xl font-bold">${{ number_format($product->price, 2) }}</span>
-                            <button class="add-to-cart-btn px-4 py-2 rounded-lg font-medium transition-colors">
+                            <button class="add-to-cart-btn px-4 py-2 rounded-lg font-medium transition-colors"
+                             data-id="{{ $product->id }}">
                                 Add to Cart
                             </button>
                         </div>
@@ -272,35 +273,36 @@
     </div>
    </footer>
 
-  <!-- Cart Popup Sidebar -->
-  <div id="cartPopup"
-    class="fixed top-0 right-0 w-80 h-full bg-white shadow-xl transform translate-x-full transition-all duration-300 z-50 flex flex-col">
-    <div class="p-4 border-b flex justify-between items-center">
-      <h2 class="text-xl font-semibold">Your Cart</h2>
-      <button onclick="closeCart()" class="text-gray-600 hover:text-black">✖</button>
-    </div>
-    <div id="cartItems" class="p-4 space-y-4 flex-1 overflow-y-auto">
-      <!-- Laravel can loop cart items here -->
-      
-      <div class="flex justify-between items-center border-b pb-2">
-        <div>
-          <p class="font-semibold">gendoura</p>
-          <p class="text-gray-600">90 dh</p>
-        </div>
-        <form method="POST">
-          @csrf
-          <button class="text-red-500">Remove</button>
-        </form>
-      </div>
-     
-    </div>
-    <div class="p-4 border-t">
-      <p class="font-semibold mb-3">90 dh</p>
-      <a href="#checkout" id="checkoutBtn" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded inline-block text-center">
-        Checkout (COD)
-      </a>
-    </div>
+ <!-- Cart Popup Sidebar -->
+<div id="cartPopup"
+  class="fixed top-0 right-0 w-80 h-full bg-white shadow-xl transform translate-x-full transition-all duration-300 z-50 flex flex-col">
+
+  <!-- Header -->
+  <div class="p-4 border-b flex justify-between items-center">
+    <h2 class="text-xl font-semibold">Your Cart</h2>
+    <button onclick="closeCart()" class="text-gray-600 hover:text-black">✖</button>
   </div>
+
+  <!-- Cart Items -->
+  <div id="cartItems" class="p-4 space-y-4 flex-1 overflow-y-auto">
+
+    <!-- JS will insert cart items here -->
+    @if(!session()->has('cart') || count(session('cart')) == 0)
+      <p class="text-gray-600 text-center" id="emptyCartMsg">Your cart is empty.</p>
+    @endif
+
+  </div>
+
+  <!-- Footer -->
+  <div class="p-4 border-t">
+    <a href="#checkout" id="checkoutBtn"
+      class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded inline-block text-center">
+      Checkout (COD)
+    </a>
+  </div>
+
+</div>
+
 
   <!-- Checkout Form Popup -->
   <div id="checkoutPopup"
@@ -333,6 +335,72 @@
     function closeCheckout() {
       document.getElementById("checkoutPopup").classList.add("hidden");
     }
+
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+
+        const productId = btn.getAttribute('data-id');
+
+        const response = await fetch("/cart/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ id: productId })
+        });
+
+        const data = await response.json();
+
+        // Update cart count in navbar
+        document.getElementById('cartCount').innerText = data.totalItems;
+        // Update cart popup
+        updateCartPopup(data.cart);
+        
+    });
+});
+
+function updateCartPopup(cart) {
+    const cartItemsDiv = document.getElementById("cartItems");
+    cartItemsDiv.innerHTML = ""; // Clear old items
+
+    if (Object.keys(cart).length === 0) {
+        cartItemsDiv.innerHTML = `<p class="text-gray-600 text-center">Your cart is empty.</p>`;
+        return;
+    }
+
+    Object.values(cart).forEach(item => {
+        cartItemsDiv.innerHTML += `
+            <div class="flex justify-between items-center border-b pb-2">
+                <div>
+                    <p class="font-semibold">${item.name}</p>
+                    <p class="text-gray-600">x ${item.quantity}</p>
+                    <p>$${item.price}</p>
+                </div>
+                <button onclick="removeFromCart(${item.id})"
+                  class="text-red-500 hover:text-red-700">
+                  Remove
+                </button>
+            </div>
+        `;
+    });
+}
+function removeFromCart(productId) {
+    fetch("/cart/remove", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ id: productId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("cartCount").innerText = data.totalItems;
+        updateCartPopup(data.cart);
+    });
+}
+
   </script>
 </body>
 </html>

@@ -8,7 +8,8 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Models\Category;
 use App\Models\Product;
 
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\StoreFront\HomeController;
+use App\Http\Controllers\StoreFront\CartController;
 // Admin Login
 Route::get('/admin/login', [AdminAuthController::class, 'loginPage'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
@@ -45,4 +46,7 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
