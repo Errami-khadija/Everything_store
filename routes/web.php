@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\OrdersController;
 use App\Models\Category;
 use App\Models\Product;
 
@@ -43,10 +44,22 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
 
 
+    Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [OrdersController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{id}/status', [OrdersController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::delete('/orders/{id}', [OrdersController::class, 'destroy'])->name('orders.destroy');
+
+
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart/json', [CartController::class, 'getCartJson'])->name('cart.json');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'update']);
+Route::post('/cart/remove', [CartController::class, 'remove']);
+Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+Route::get('/thank-you', [CartController::class, 'thankYou'])->name('cart.thankyou');
+
+
 

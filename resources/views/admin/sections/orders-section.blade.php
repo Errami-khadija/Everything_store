@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('content')
+
 <!-- Orders Section -->
    <section id="ordersSection" class="p-6 fade-in hidden"><!-- Orders List View -->
     <div id="ordersListView" class="bg-white rounded-xl shadow-sm">
@@ -207,3 +211,4 @@
      </div>
     </div>
    </section>
+   @endsection

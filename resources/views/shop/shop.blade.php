@@ -292,6 +292,10 @@
     @endif
 
   </div>
+ <div class="mt-4 border-t pt-3">
+    <p class="text-lg font-semibold">Total Items: <span id="totalItems">0</span></p>
+    <p class="text-lg font-semibold">Total Price: $<span id="totalPrice">0.00</span></p>
+</div>
 
   <!-- Footer -->
   <div class="p-4 border-t">
@@ -309,20 +313,23 @@
     class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex justify-center items-center p-4">
     <div class="bg-white p-6 rounded-xl w-full max-w-md">
       <h2 class="text-xl font-semibold mb-4">Checkout (Cash on Delivery)</h2>
-      <form  method="POST" class="space-y-3">
+      <form id="checkoutForm" class="space-y-3">
         @csrf
-        <input type="text" name="name" placeholder="Full Name" required class="w-full border p-2 rounded" />
-        <input type="text" name="phone" placeholder="Phone Number" required class="w-full border p-2 rounded" />
-        <input type="text" name="city" placeholder="City" required class="w-full border p-2 rounded" />
-        <textarea name="address" placeholder="Address" required class="w-full border p-2 rounded"></textarea>
+        <input type="text" name="name" id="customerName" placeholder="Full Name" required class="w-full border p-2 rounded" />
+        <input type="text" name="phone" id="customerPhone" placeholder="Phone Number" required class="w-full border p-2 rounded" />
+        <textarea name="address" id="customerAddress" placeholder="Address" required class="w-full border p-2 rounded"></textarea>
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">Place Order</button>
         <button type="button" onclick="closeCheckout()" class="w-full bg-gray-300 hover:bg-gray-400 py-2 rounded">Cancel</button>
       </form>
     </div>
-  </div>
+</div>
+   
+
 
 
 <script>
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
     document.getElementById("openCartBtn").onclick = () => {
       document.getElementById("cartPopup").classList.remove("translate-x-full");
     };
@@ -335,6 +342,20 @@
     function closeCheckout() {
       document.getElementById("checkoutPopup").classList.add("hidden");
     }
+
+ document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const response = await fetch("/cart/json"); // <-- use the JSON endpoint
+        const data = await response.json();
+
+        updateCartPopup(data.cart, data.totalItems, data.totalPrice);
+        updateCartCount(data.totalItems);
+    } catch (error) {
+        console.error("Failed to load cart:", error);
+    }
+});
+
+
 
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
@@ -355,36 +376,98 @@
         // Update cart count in navbar
         document.getElementById('cartCount').innerText = data.totalItems;
         // Update cart popup
-        updateCartPopup(data.cart);
+        updateCartPopup(data.cart,data.totalItems,data.totalPrice);
+        updateCartCount(data.totalItems);
         
     });
 });
 
-function updateCartPopup(cart) {
-    const cartItemsDiv = document.getElementById("cartItems");
-    cartItemsDiv.innerHTML = ""; // Clear old items
+document.getElementById("checkoutForm")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    if (Object.keys(cart).length === 0) {
+    const name = document.getElementById("customerName").value;
+    const phone = document.getElementById("customerPhone").value;
+    const address = document.getElementById("customerAddress").value;
+
+    const response = await fetch("/cart/checkout", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ name, phone, address })
+    });
+
+    const data = await response.json();
+
+    alert(data.message);
+    closeCheckout();
+
+    // Clear the cart UI
+    updateCartPopup({}, 0, 0);
+    updateCartCount(0);
+
+    // Optionally, reset the form fields
+    document.getElementById("checkoutForm").reset();
+});
+
+
+
+function updateCartPopup(cart, totalItems, totalPrice) {
+    const cartItemsDiv = document.getElementById("cartItems");
+
+    cartItemsDiv.innerHTML = "";
+
+    if (!cart || Object.keys(cart).length === 0) {
         cartItemsDiv.innerHTML = `<p class="text-gray-600 text-center">Your cart is empty.</p>`;
+        document.getElementById("totalItems").textContent = 0;
+         document.getElementById("totalPrice").textContent = "0.00";
         return;
     }
 
-    Object.values(cart).forEach(item => {
-        cartItemsDiv.innerHTML += `
-            <div class="flex justify-between items-center border-b pb-2">
-                <div>
-                    <p class="font-semibold">${item.name}</p>
-                    <p class="text-gray-600">x ${item.quantity}</p>
-                    <p>$${item.price}</p>
+   Object.values(cart).forEach(item => {
+    cartItemsDiv.innerHTML += `
+        <div class="flex gap-3 items-center border-b pb-3">
+
+            <img 
+                src="${item.image ? `/uploads/products/${item.image}` : '/images/no-image.png'}"
+                class="w-14 h-14 object-cover rounded"
+            />
+
+            <div class="flex-1">
+                <p class="font-semibold">${item.name}</p>
+
+                <div class="flex items-center gap-2 mt-1">
+                    <button 
+                        onclick="updateQty(${item.id}, 'minus')"
+                        class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">−</button>
+
+                    <span class="px-3">${item.quantity}</span>
+
+                    <button 
+                        onclick="updateQty(${item.id}, 'plus')"
+                        class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">+</button>
                 </div>
-                <button onclick="removeFromCart(${item.id})"
-                  class="text-red-500 hover:text-red-700">
-                  Remove
-                </button>
+
+                <p class="text-sm font-medium mt-1">
+                    $${(item.price * item.quantity).toFixed(2)}
+                </p>
             </div>
-        `;
-    });
+
+            <button 
+                onclick="removeFromCart(${item.id})"
+                class="text-red-500 hover:text-red-700 text-sm">
+                ✖
+            </button>
+
+        </div>
+    `;
+});
+    
+    document.getElementById("totalItems").textContent = totalItems;
+     document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
 }
+
 function removeFromCart(productId) {
     fetch("/cart/remove", {
         method: "POST",
@@ -396,10 +479,36 @@ function removeFromCart(productId) {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById("cartCount").innerText = data.totalItems;
-        updateCartPopup(data.cart);
+        document.getElementById("cartCount").textContent = data.totalItems;
+        updateCartPopup(data.cart, data.totalItems, data.totalPrice);
     });
 }
+
+
+
+function updateCartCount(totalItems) {
+    document.getElementById("cartCount").textContent = totalItems;
+}
+
+function updateQty(productId, action) {
+    fetch("/cart/update", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({
+            id: productId,
+            action: action
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("cartCount").textContent = data.totalItems;
+        updateCartPopup(data.cart, data.totalItems, data.totalPrice);
+    });
+}
+
 
   </script>
 </body>
