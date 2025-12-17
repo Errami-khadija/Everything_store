@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('admin.layout')
 
 @section('content')
 
 <!-- Orders Section -->
-   <section id="ordersSection" class="p-6 fade-in hidden"><!-- Orders List View -->
+   <section id="ordersSection" class="p-6 fade-in "><!-- Orders List View -->
     <div id="ordersListView" class="bg-white rounded-xl shadow-sm">
      <div class="p-6 border-b border-gray-200">
       <div class="flex items-center justify-between">
@@ -26,66 +26,32 @@
         </tr>
        </thead>
        <tbody class="bg-white divide-y divide-gray-200">
+        @foreach($orders as $order)
         <tr>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD-001</td>
+         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD{{ $order->id }}</td>
          <td class="px-6 py-4 whitespace-nowrap">
           <div>
            <div class="text-sm font-medium text-gray-900">
-            John Doe
+            {{ $order->customer_name }}
            </div>
+           
            <div class="text-sm text-gray-500">
-            john@example.com
-           </div>
-           <div class="text-sm text-gray-500">
-            📞 +1 (555) 123-4567
+            📞 {{ $order->customer_phone }}
            </div>
           </div></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3 items</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$125.00 (COD)</td>
-         <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-01-15</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button onclick="viewOrder('ORD-001')" class="text-blue-600 hover:text-blue-900 mr-3">View</button> <button onclick="processOrder('ORD-001')" class="text-green-600 hover:text-green-900 mr-3">Process</button> <button onclick="cancelOrder('ORD-001')" class="text-red-600 hover:text-red-900">Cancel</button></td>
+         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $order->total_items ?? '—' }} Items</td>
+         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ $order->total_amount }}(COD)</td>
+         <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-semibold rounded-full
+        @if($order->status == 'pending') bg-yellow-100 text-yellow-800
+        @elseif($order->status == 'delivered') bg-green-100 text-green-800
+        @elseif($order->status == 'processing') bg-blue-100 text-blue-800
+        @else bg-gray-100 text-gray-800 @endif">
+            {{ ucfirst($order->status) }}
+        </span></td>
+         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"> {{ $order->created_at->format('Y-m-d') }}</td>
+         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button onclick="viewOrder('ORD{{ $order->id }}')" class="text-blue-600 hover:text-blue-900 mr-3">View</button> <button onclick="processOrder('ORD{{ $order->id }}')" class="text-green-600 hover:text-green-900 mr-3">Process</button> <button onclick="cancelOrder('ORD{{ $order->id }}')" class="text-red-600 hover:text-red-900">Cancel</button></td>
         </tr>
-        <tr>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD-002</td>
-         <td class="px-6 py-4 whitespace-nowrap">
-          <div>
-           <div class="text-sm font-medium text-gray-900">
-            Jane Smith
-           </div>
-           <div class="text-sm text-gray-500">
-            jane@example.com
-           </div>
-           <div class="text-sm text-gray-500">
-            📞 +1 (555) 987-6543
-           </div>
-          </div></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2 items</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$89.50 (COD)</td>
-         <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Delivered</span></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-01-14</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button onclick="viewOrder('ORD-002')" class="text-blue-600 hover:text-blue-900 mr-3">View</button> <button class="text-gray-400 cursor-not-allowed mr-3">Process</button> <button class="text-gray-400 cursor-not-allowed">Cancel</button></td>
-        </tr>
-        <tr>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD-003</td>
-         <td class="px-6 py-4 whitespace-nowrap">
-          <div>
-           <div class="text-sm font-medium text-gray-900">
-            Mike Johnson
-           </div>
-           <div class="text-sm text-gray-500">
-            mike@example.com
-           </div>
-           <div class="text-sm text-gray-500">
-            📞 +1 (555) 456-7890
-           </div>
-          </div></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1 item</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$234.75 (COD)</td>
-         <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Processing</span></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-01-16</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button onclick="viewOrder('ORD-003')" class="text-blue-600 hover:text-blue-900 mr-3">View</button> <button onclick="processOrder('ORD-003')" class="text-green-600 hover:text-green-900 mr-3">Process</button> <button onclick="cancelOrder('ORD-003')" class="text-red-600 hover:text-red-900">Cancel</button></td>
-        </tr>
+       @endforeach
        </tbody>
       </table>
      </div>

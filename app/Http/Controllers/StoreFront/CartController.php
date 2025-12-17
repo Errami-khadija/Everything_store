@@ -112,11 +112,13 @@ public function checkout(Request $request)
     }
 
     // 1. Create order
+$totalItems = array_sum(array_column($cart, 'quantity'));
 $order = new \App\Models\Order();
 $order->customer_name = $request->name;
 $order->customer_phone = $request->phone;
 $order->customer_address = $request->address;
 $order->total_amount = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
+$order->total_items = $totalItems;
 $order->status = 'pending'; // default status
 $order->save();
 

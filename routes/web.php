@@ -44,10 +44,10 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
 
 
-    Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{id}', [OrdersController::class, 'show'])->name('orders.show');
-    Route::post('/orders/{id}/status', [OrdersController::class, 'updateStatus'])->name('orders.updateStatus');
-    Route::delete('/orders/{id}', [OrdersController::class, 'destroy'])->name('orders.destroy');
+    Route::get('/orders', [OrdersController::class, 'index'])->name('admin.orders.index');
+    Route::get('/orders/{id}', [OrdersController::class, 'show'])->name('admin.orders.show');
+    Route::post('/orders/{id}/status', [OrdersController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    Route::delete('/orders/{id}', [OrdersController::class, 'destroy'])->name('admin.orders.destroy');
 
 
 });

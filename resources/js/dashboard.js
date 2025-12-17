@@ -136,18 +136,18 @@
 
 
         // Order Management Functions
-        function showOrdersList() {
+       window.showOrdersList = function showOrdersList() {
             document.getElementById('orderDetailsView').classList.add('hidden');
             document.getElementById('ordersListView').classList.remove('hidden');
         }
 
-        function viewOrder(orderId) {
+       window.viewOrder = function viewOrder(orderId) {
             document.getElementById('ordersListView').classList.add('hidden');
             document.getElementById('orderDetailsView').classList.remove('hidden');
             document.getElementById('orderDetailId').textContent = orderId;
         }
 
-        function processOrder(orderId) {
+       window.processOrder = function processOrder(orderId) {
             const statusSelect = document.getElementById('orderStatusUpdate');
             const currentStatus = statusSelect.value;
             
@@ -165,7 +165,7 @@
             updateOrderStatus();
         }
 
-        function cancelOrder(orderId) {
+        window.cancelOrder = function cancelOrder(orderId) {
             // Create inline confirmation
             const button = event.target;
             const originalText = button.textContent;
@@ -187,7 +187,7 @@
             };
         }
 
-        function updateOrderStatus() {
+        window.updateOrderStatus = function updateOrderStatus() {
             const newStatus = document.getElementById('orderStatusUpdate').value;
             const statusColors = {
                 'pending': 'bg-yellow-100 text-yellow-800',
@@ -206,7 +206,7 @@
             showToast(`Order status updated to ${newStatus}!`, 'success');
         }
 
-        function printOrder() {
+        window.printOrder = function printOrder() {
             showToast('Printing order...', 'info');
             // Simulate print functionality
             setTimeout(() => {
@@ -214,7 +214,7 @@
             }, 2000);
         }
 
-        function sendSMS() {
+        window.sendSMS = function sendSMS() {
             showToast('Sending SMS update to customer...', 'info');
             // Simulate SMS functionality
             setTimeout(() => {
@@ -222,7 +222,7 @@
             }, 2000);
         }
 
-        function refundOrder() {
+        window.refundOrder = function refundOrder() {
             // Create inline confirmation
             const button = event.target;
             const originalText = button.textContent;
