@@ -48,6 +48,8 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     Route::get('/orders/{id}', [OrdersController::class, 'show'])->name('admin.orders.show');
     Route::post('/orders/{id}/status', [OrdersController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::delete('/orders/{id}', [OrdersController::class, 'destroy'])->name('admin.orders.destroy');
+    Route::put('/orders/{order}/status', [OrdersController::class, 'updateStatus']);
+
 
 
 });

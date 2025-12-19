@@ -13,25 +13,37 @@ class OrdersController extends Controller
     public function index()
     {
         $orders = Order::latest()->get();
-        return view('admin.sections.orders-section', compact('orders'));
+        return view('admin.sections.orders.orders-section', compact('orders'));
     }
 
     // Show order details
     public function show($id)
-    {
-        $order = Order::with('items')->findOrFail($id);
-        return view('admin.sections.orders-section', compact('order'));
+    {   
+        $order = Order::with('items.product')->findOrFail($id);
+        return view('admin.sections.orders.show', compact('order'));
     }
 
-    // Update order status
-    public function updateStatus(Request $request, $id)
-    {
-        $order = Order::findOrFail($id);
-        $order->status = $request->status;
-        $order->save();
+  public function updateStatus(Request $request, Order $order)
+{
+    $request->validate([
+        'status' => 'required|in:pending,processing,delivered,cancelled'
+    ]);
 
-        return redirect()->back()->with('success', 'Order status updated.');
+    //  prevent cancelling delivered orders
+    if ($order->status === 'delivered') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Delivered orders cannot be cancelled'
+        ], 403);
     }
+
+    $order->update([
+        'status' => $request->status
+    ]);
+
+    return response()->json(['success' => true]);
+}
+
 
     // Cancel order (delete)
     public function destroy($id)

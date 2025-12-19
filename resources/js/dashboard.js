@@ -147,23 +147,6 @@
             document.getElementById('orderDetailId').textContent = orderId;
         }
 
-       window.processOrder = function processOrder(orderId) {
-            const statusSelect = document.getElementById('orderStatusUpdate');
-            const currentStatus = statusSelect.value;
-            
-            // Determine next status
-            const statusFlow = {
-                'pending': 'confirmed',
-                'confirmed': 'processing',
-                'processing': 'shipped',
-                'shipped': 'delivered'
-            };
-            
-            const nextStatus = statusFlow[currentStatus] || 'processing';
-            statusSelect.value = nextStatus;
-            
-            updateOrderStatus();
-        }
 
         window.cancelOrder = function cancelOrder(orderId) {
             // Create inline confirmation
@@ -187,24 +170,46 @@
             };
         }
 
-        window.updateOrderStatus = function updateOrderStatus() {
-            const newStatus = document.getElementById('orderStatusUpdate').value;
-            const statusColors = {
-                'pending': 'bg-yellow-100 text-yellow-800',
-                'confirmed': 'bg-blue-100 text-blue-800',
-                'processing': 'bg-purple-100 text-purple-800',
-                'shipped': 'bg-indigo-100 text-indigo-800',
-                'delivered': 'bg-green-100 text-green-800',
-                'cancelled': 'bg-red-100 text-red-800'
-            };
-            
-            // Update current status display
-            const currentStatusBadge = document.querySelector('#orderDetailsView .rounded-full');
-            currentStatusBadge.className = `px-3 py-1 text-sm font-semibold rounded-full ${statusColors[newStatus]}`;
-            currentStatusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-            
-            showToast(`Order status updated to ${newStatus}!`, 'success');
-        }
+       window.updateOrderStatus = function () {
+  const select = document.getElementById('orderStatusUpdate');
+  const newStatus = select.value;
+  const orderId = select.dataset.orderId;
+
+  const statusColors = {
+    pending: 'bg-yellow-100 text-yellow-800',
+    processing: 'bg-purple-100 text-purple-800',
+    delivered: 'bg-green-100 text-green-800',
+    cancelled: 'bg-red-100 text-red-800'
+  };
+
+  fetch(`/admin/orders/${orderId}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+    },
+    body: JSON.stringify({ status: newStatus })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Request failed');
+    return res.json();
+  })
+  .then(data => {
+    const badge = document.getElementById('orderStatusBadge');
+
+    if (!badge) return;
+
+    badge.className = `px-3 py-1 text-sm font-semibold rounded-full ${statusColors[newStatus]}`;
+    badge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+
+    showToast('Order status updated successfully', 'success');
+  })
+  .catch(() => {
+    showToast('Failed to update order status', 'error');
+  });
+};
+
+
 
         window.printOrder = function printOrder() {
             showToast('Printing order...', 'info');
