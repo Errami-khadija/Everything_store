@@ -47,8 +47,13 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     Route::get('/orders', [OrdersController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/{id}', [OrdersController::class, 'show'])->name('admin.orders.show');
     Route::post('/orders/{id}/status', [OrdersController::class, 'updateStatus'])->name('admin.orders.updateStatus');
-    Route::delete('/orders/{id}', [OrdersController::class, 'destroy'])->name('admin.orders.destroy');
     Route::put('/orders/{order}/status', [OrdersController::class, 'updateStatus']);
+    Route::put('/orders/{order}/cancel', [OrdersController::class, 'cancel']);
+    Route::get('/orders/{order}/print', [OrdersController::class, 'print']);
+    Route::get('/orders/{order}/invoice', [OrdersController::class, 'invoice'])
+    ->name('admin.orders.invoice');
+
+
 
 
 

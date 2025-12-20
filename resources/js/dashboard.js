@@ -148,27 +148,50 @@
         }
 
 
-        window.cancelOrder = function cancelOrder(orderId) {
-            // Create inline confirmation
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = 'Confirm Cancel?';
-            button.classList.add('bg-red-800');
-            
+     window.cancelOrder = function (orderId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, cancel it!'
+    }).then((result) => {
+
+        if (!result.isConfirmed) return;
+
+        fetch(`/admin/orders/${orderId}/cancel`, {
+            method: 'PUT',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            Swal.fire(
+                'Cancelled!',
+                data.message,
+                'success'
+            );
+
+            // Refresh page so status updates everywhere
             setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('bg-red-800');
-            }, 3000);
-            
-            // Simulate cancel after confirmation
-            button.onclick = () => {
-                showToast('Order cancelled successfully!', 'success');
-                // Update status in UI
-                const statusBadge = button.closest('tr').querySelector('.rounded-full');
-                statusBadge.className = 'px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800';
-                statusBadge.textContent = 'Cancelled';
-            };
-        }
+                window.location.reload();
+            }, 1000);
+        })
+        .catch(() => {
+            Swal.fire(
+                'Error!',
+                'Something went wrong.',
+                'error'
+            );
+        });
+    });
+};
+
+
 
        window.updateOrderStatus = function () {
   const select = document.getElementById('orderStatusUpdate');
@@ -210,40 +233,20 @@
 };
 
 
+window.printOrder = function (orderId) {
+    window.open(`/admin/orders/${orderId}/print`, '_blank');
+};
 
-        window.printOrder = function printOrder() {
-            showToast('Printing order...', 'info');
-            // Simulate print functionality
-            setTimeout(() => {
-                showToast('Order printed successfully!', 'success');
-            }, 2000);
-        }
+window.downloadInvoice = function (orderId) {
+    window.location.href = `/admin/orders/${orderId}/invoice`;
+};
 
-        window.sendSMS = function sendSMS() {
-            showToast('Sending SMS update to customer...', 'info');
-            // Simulate SMS functionality
-            setTimeout(() => {
-                showToast('SMS sent successfully!', 'success');
-            }, 2000);
-        }
+        window.sendSMS = function (orderId) {
+    showToast('SMS sent to customer successfully!', 'success');
+};
 
-        window.refundOrder = function refundOrder() {
-            // Create inline confirmation
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = '🔄 Confirm Refund?';
-            button.classList.add('bg-red-800');
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('bg-red-800');
-            }, 3000);
-            
-            // Simulate refund after confirmation
-            button.onclick = () => {
-                showToast('Refund processed successfully!', 'success');
-            };
-        }
+
+       
 
         // Category Management Functions
        window.showAddCategory = function showAddCategory() {

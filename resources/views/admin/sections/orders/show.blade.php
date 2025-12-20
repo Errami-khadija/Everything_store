@@ -111,14 +111,18 @@
         <div class="bg-gray-50 rounded-lg p-6">
          <h4 class="text-lg font-semibold text-gray-800 mb-4">Order Summary</h4>
          <div class="space-y-3">
-          <div class="flex justify-between"><span class="text-gray-600">Subtotal:</span> <span class="text-gray-900">$349.97</span>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Subtotal:</span> 
+            <span class="text-gray-900">  ${{ number_format($subtotal, 2) }}</span>
           </div>
-          <div class="flex justify-between"><span class="text-gray-600">Delivery Fee:</span> <span class="text-gray-900">$5.00</span>
-          </div>
-          <div class="flex justify-between"><span class="text-gray-600">Tax:</span> <span class="text-gray-900">$28.00</span>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Delivery Fee:</span> 
+            <span class="text-gray-900">  ${{ number_format($deliveryFee, 2) }}</span>
           </div>
           <hr class="border-gray-300">
-          <div class="flex justify-between font-semibold text-lg"><span class="text-gray-900">Total:</span> <span class="text-gray-900">$382.97</span>
+          <div class="flex justify-between font-semibold text-lg">
+            <span class="text-gray-900">Total:</span> 
+            <span class="text-gray-900"> ${{ number_format($total, 2) }}</span>
           </div>
           <div class="mt-2"><span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800"> 💰 Cash on Delivery </span>
           </div>
@@ -126,8 +130,15 @@
         </div><!-- Quick Actions -->
         <div class="bg-gray-50 rounded-lg p-6">
          <h4 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h4>
-         <div class="space-y-3"><button onclick="printOrder()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"> 🖨️ Print Order </button> <button onclick="sendSMS()" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"> 📱 Send SMS Update </button> <button onclick="refundOrder()" class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"> 💸 Process Refund </button>
-         </div>
+         <div class="space-y-3">
+          <button  onclick="downloadInvoice({{ $order->id }})" 
+                   class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"> 🖨️ Download Invoice </button> 
+          <button  onclick="sendSMS({{ $order->id }})"
+           class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"> 📱 Send SMS Update </button> 
+            <!-- Cancel (only if allowed) -->
+            @if(!in_array($order->status, ['cancelled', 'delivered']))
+           <button onclick="cancelOrder({{ $order->id }})" class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"> ❌ Cancel Order </button>
+             @endif
         </div>
        </div>
       </div>

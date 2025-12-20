@@ -59,7 +59,12 @@
              class="text-blue-600 hover:text-blue-900 mr-3">
              View
            </a>
-          <button onclick="cancelOrder('ORD{{ $order->id }}')" class="text-red-600 hover:text-red-900">Cancel</button></td>
+          
+         <button onclick="printOrder({{ $order->id }})"  class="text-green-600 hover:text-green-900 mr-3">Print</button>
+           @if(!in_array($order->status, ['cancelled', 'delivered']))
+             <button onclick="cancelOrder({{ $order->id }})" class="text-red-600 hover:text-red-900"> Cancel </button>
+             @endif
+          </td>
         </tr>
        @endforeach
        </tbody>
