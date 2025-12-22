@@ -240,12 +240,6 @@ window.printOrder = function (orderId) {
 window.downloadInvoice = function (orderId) {
     window.location.href = `/admin/orders/${orderId}/invoice`;
 };
-
-        window.sendSMS = function (orderId) {
-    showToast('SMS sent to customer successfully!', 'success');
-};
-
-
        
 
         // Category Management Functions
@@ -492,12 +486,12 @@ window.addSpecificationEdit = function addSpecificationEdit() {
         let currentCustomerId = null;
         let currentCustomerData = {};
 
-        function showCustomersList() {
+       window.showCustomersList = function showCustomersList() {
             document.getElementById('customerDetailsView').classList.add('hidden');
             document.getElementById('customersListView').classList.remove('hidden');
         }
 
-        function viewCustomer(customerId) {
+       window.viewCustomer = function viewCustomer(customerId) {
             currentCustomerId = customerId;
             
             // Sample customer data
@@ -622,7 +616,7 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             }
         }
 
-        function blockCustomer(customerId) {
+       window.blockCustomer = function blockCustomer(customerId) {
             // Create inline confirmation
             const button = event.target;
             const originalText = button.textContent;
@@ -660,7 +654,7 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             };
         }
 
-        function unblockCustomer(customerId) {
+        window.unblockCustomer =function unblockCustomer(customerId) {
             // Create inline confirmation
             const button = event.target;
             const originalText = button.textContent;
@@ -700,7 +694,7 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             };
         }
 
-        function toggleCustomerBlock() {
+      window.toggleCustomerBlock = function toggleCustomerBlock() {
             if (currentCustomerData.status === 'blocked') {
                 unblockCustomerFromDetails();
             } else {
@@ -708,7 +702,7 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             }
         }
 
-        function blockCustomerFromDetails() {
+     window.blockCustomerFromDetails = function blockCustomerFromDetails() {
             // Create inline confirmation
             const button = document.getElementById('blockUnblockBtn');
             const originalText = button.textContent;
@@ -745,7 +739,7 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             };
         }
 
-        function unblockCustomerFromDetails() {
+       window.unblockCustomerFromDetails = function unblockCustomerFromDetails() {
             // Create inline confirmation
             const button = document.getElementById('blockUnblockBtn');
             const originalText = button.textContent;
@@ -798,7 +792,7 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             }, 2000);
         }
 
-        function viewCustomerOrders() {
+       window.viewCustomerOrders = function viewCustomerOrders() {
             showToast('Redirecting to customer orders...', 'info');
             setTimeout(() => {
                 showSection('orders');

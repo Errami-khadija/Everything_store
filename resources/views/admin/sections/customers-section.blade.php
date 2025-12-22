@@ -1,5 +1,8 @@
+ @extends('admin.layout')
+
+@section('content')
  <!-- Customers Section -->
-   <section id="customersSection" class="p-6 fade-in hidden"><!-- Customers List View -->
+   <section id="customersSection" class="p-6 fade-in "><!-- Customers List View -->
     <div id="customersListView" class="bg-white rounded-xl shadow-sm">
      <div class="p-6 border-b border-gray-200">
       <div class="flex items-center justify-between">
@@ -22,119 +25,37 @@
         </tr>
        </thead>
        <tbody class="bg-white divide-y divide-gray-200">
-        <tr id="customer-john">
+        @foreach($customers as $customer)
+        <tr id="customer-{{ $customer->id }}">
          <td class="px-6 py-4 whitespace-nowrap">
           <div class="flex items-center">
            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-            JD
+           {{ strtoupper(substr($customer->name,0,1) . substr(explode(' ', $customer->name)[1] ?? '',0,1)) }}
            </div>
            <div class="ml-4">
             <div class="text-sm font-medium text-gray-900">
-             John Doe
+            {{ $customer->name }}
             </div>
             <div class="text-sm text-gray-500">
-             Premium Customer
+               {{ $customer->orders_count > 5 ? 'Premium Customer' : 'Regular Customer' }}
             </div>
            </div>
           </div></td>
          <td class="px-6 py-4 whitespace-nowrap">
-          <div class="text-sm text-gray-900">
-           john@example.com
-          </div>
+         
           <div class="text-sm text-gray-500">
-           +1 (555) 123-4567
+           {{ $customer->phone }}
           </div></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5 orders</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$567.50</td>
+         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"> {{ $customer->orders_count }} orders</td>
+         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ number_format($customer->orders_sum_total_amount ?? 0, 2) }}</td>
          <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dec 1, 2023</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button onclick="viewCustomer('john')" class="text-blue-600 hover:text-blue-900 mr-3">View</button> <button onclick="blockCustomer('john')" class="text-red-600 hover:text-red-900">Block</button></td>
+         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"> {{ $customer->created_at->format('M d, Y') }}</td>
+         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button onclick="viewCustomer({{ $customer->id }})" class="text-blue-600 hover:text-blue-900 mr-3">View</button>
+        <button onclick="blockCustomer({{ $customer->id }})" class="text-red-600 hover:text-red-900">Block</button></td>
         </tr>
-        <tr id="customer-jane">
-         <td class="px-6 py-4 whitespace-nowrap">
-          <div class="flex items-center">
-           <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-semibold">
-            JS
-           </div>
-           <div class="ml-4">
-            <div class="text-sm font-medium text-gray-900">
-             Jane Smith
-            </div>
-            <div class="text-sm text-gray-500">
-             Regular Customer
-            </div>
-           </div>
-          </div></td>
-         <td class="px-6 py-4 whitespace-nowrap">
-          <div class="text-sm text-gray-900">
-           jane@example.com
-          </div>
-          <div class="text-sm text-gray-500">
-           +1 (555) 987-6543
-          </div></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">3 orders</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$234.75</td>
-         <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Jan 5, 2024</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button onclick="viewCustomer('jane')" class="text-blue-600 hover:text-blue-900 mr-3">View</button> <button onclick="blockCustomer('jane')" class="text-red-600 hover:text-red-900">Block</button></td>
-        </tr>
-        <tr id="customer-mike">
-         <td class="px-6 py-4 whitespace-nowrap">
-          <div class="flex items-center">
-           <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-            MJ
-           </div>
-           <div class="ml-4">
-            <div class="text-sm font-medium text-gray-900">
-             Mike Johnson
-            </div>
-            <div class="text-sm text-gray-500">
-             New Customer
-            </div>
-           </div>
-          </div></td>
-         <td class="px-6 py-4 whitespace-nowrap">
-          <div class="text-sm text-gray-900">
-           mike@example.com
-          </div>
-          <div class="text-sm text-gray-500">
-           +1 (555) 456-7890
-          </div></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1 order</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$89.99</td>
-         <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Jan 18, 2024</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button onclick="viewCustomer('mike')" class="text-blue-600 hover:text-blue-900 mr-3">View</button> <button onclick="blockCustomer('mike')" class="text-red-600 hover:text-red-900">Block</button></td>
-        </tr>
-        <tr id="customer-sarah" class="opacity-60">
-         <td class="px-6 py-4 whitespace-nowrap">
-          <div class="flex items-center">
-           <div class="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center text-white font-semibold">
-            SW
-           </div>
-           <div class="ml-4">
-            <div class="text-sm font-medium text-gray-900">
-             Sarah Wilson
-            </div>
-            <div class="text-sm text-gray-500">
-             Blocked Customer
-            </div>
-           </div>
-          </div></td>
-         <td class="px-6 py-4 whitespace-nowrap">
-          <div class="text-sm text-gray-900">
-           sarah@example.com
-          </div>
-          <div class="text-sm text-gray-500">
-           +1 (555) 321-0987
-          </div></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2 orders</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$156.25</td>
-         <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Blocked</span></td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Nov 15, 2023</td>
-         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button onclick="viewCustomer('sarah')" class="text-blue-600 hover:text-blue-900 mr-3">View</button> <button onclick="unblockCustomer('sarah')" class="text-green-600 hover:text-green-900">Unblock</button></td>
-        </tr>
+        @endforeach
        </tbody>
+      
       </table>
      </div>
     </div><!-- Customer Details View -->
@@ -293,3 +214,4 @@
      </div>
     </div>
    </section>
+@endsection

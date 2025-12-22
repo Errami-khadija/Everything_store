@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Everything Store</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 <body class="bg-gray-100">
 
@@ -317,6 +319,7 @@
         @csrf
         <input type="text" name="name" id="customerName" placeholder="Full Name" required class="w-full border p-2 rounded" />
         <input type="text" name="phone" id="customerPhone" placeholder="Phone Number" required class="w-full border p-2 rounded" />
+        <input type="text" name="city" id="customerCity" placeholder="City" required class="w-full border p-2 rounded" />
         <textarea name="address" id="customerAddress" placeholder="Address" required class="w-full border p-2 rounded"></textarea>
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">Place Order</button>
         <button type="button" onclick="closeCheckout()" class="w-full bg-gray-300 hover:bg-gray-400 py-2 rounded">Cancel</button>
@@ -385,29 +388,35 @@
 document.getElementById("checkoutForm")?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
     const name = document.getElementById("customerName").value;
     const phone = document.getElementById("customerPhone").value;
+    const city = document.getElementById("customerCity").value;
     const address = document.getElementById("customerAddress").value;
 
     const response = await fetch("/cart/checkout", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            "X-CSRF-TOKEN": csrfToken,
+            "Accept": "application/json"
         },
-        body: JSON.stringify({ name, phone, address })
+        body: JSON.stringify({ name, phone, city, address })
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    try {
+        const data = JSON.parse(text);
+        alert(data.message);
+    } catch (err) {
+        console.error("Invalid JSON:", text);
+        alert("An error occurred. See console for details.");
+    }
 
-    alert(data.message);
     closeCheckout();
-
-    // Clear the cart UI
     updateCartPopup({}, 0, 0);
     updateCartCount(0);
-
-    // Optionally, reset the form fields
     document.getElementById("checkoutForm").reset();
 });
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrdersController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Models\Category;
 use App\Models\Product;
 
@@ -45,6 +46,8 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
 
 
     Route::get('/orders', [OrdersController::class, 'index'])->name('admin.orders.index');
+     Route::get('/orders/export', [OrdersController::class, 'export'])
+    ->name('admin.orders.export');
     Route::get('/orders/{id}', [OrdersController::class, 'show'])->name('admin.orders.show');
     Route::post('/orders/{id}/status', [OrdersController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::put('/orders/{order}/status', [OrdersController::class, 'updateStatus']);
@@ -52,6 +55,13 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     Route::get('/orders/{order}/print', [OrdersController::class, 'print']);
     Route::get('/orders/{order}/invoice', [OrdersController::class, 'invoice'])
     ->name('admin.orders.invoice');
+
+    Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customers.index');
+    Route::get('/customers/{id}', [CustomerController::class, 'show'])->name('admin.customers.show');
+
+
+   
+
 
 
 

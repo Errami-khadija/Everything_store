@@ -38,6 +38,7 @@
          <h4 class="text-lg font-semibold text-gray-800 mb-4">Delivery Address</h4>
          <div class="space-y-2">
           <p class="text-gray-900">{{ $order->customer_address }}</p>
+          <p class="text-gray-900">{{ $order->customer_city ?? 'NULL' }}</p>
           
          </div>
         </div><!-- Order Items -->
@@ -133,8 +134,7 @@
          <div class="space-y-3">
           <button  onclick="downloadInvoice({{ $order->id }})" 
                    class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"> 🖨️ Download Invoice </button> 
-          <button  onclick="sendSMS({{ $order->id }})"
-           class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"> 📱 Send SMS Update </button> 
+          
             <!-- Cancel (only if allowed) -->
             @if(!in_array($order->status, ['cancelled', 'delivered']))
            <button onclick="cancelOrder({{ $order->id }})" class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"> ❌ Cancel Order </button>

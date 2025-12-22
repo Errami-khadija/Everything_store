@@ -8,8 +8,28 @@
      <div class="p-6 border-b border-gray-200">
       <div class="flex items-center justify-between">
        <h3 class="text-lg font-semibold text-gray-800">Orders Management</h3>
-       <div class="flex space-x-3"><select id="orderStatusFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm"> <option value="">All Orders</option> <option value="pending">Pending</option> <option value="confirmed">Confirmed</option> <option value="processing">Processing</option> <option value="shipped">Shipped</option> <option value="delivered">Delivered</option> <option value="cancelled">Cancelled</option> </select> <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors"> Export Orders </button>
-       </div>
+       <div class="flex space-x-3">
+        <form method="GET" >
+    <select name="status" class="border rounded px-3 py-2">
+        <option value="">All Status</option>
+        <option value="pending" {{ request('status')=='pending' ? 'selected' : '' }}>Pending</option>
+        <option value="processing" {{ request('status')=='processing' ? 'selected' : '' }}>Processing</option>
+         <option value="delivered" {{ request('status')=='delivered' ? 'selected' : '' }}>Delivered</option>
+        <option value="cancelled" {{ request('status')=='cancelled' ? 'selected' : '' }}>Cancelled</option>
+    </select>
+
+    <input type="date" name="from" value="{{ request('from') }}" class="border rounded px-3 py-2">
+    <input type="date" name="to" value="{{ request('to') }}" class="border rounded px-3 py-2">
+
+    <button class="bg-black text-white px-4 py-2 rounded">
+        Filter
+    </button>
+</form>
+       <a href="{{ route('admin.orders.export') . '?' . http_build_query(request()->query()) }}"
+   class="bg-blue-600 text-white px-4 py-2 rounded">
+   Export CSV
+</a>
+          </div>
       </div>
      </div>
      <div class="overflow-x-auto">

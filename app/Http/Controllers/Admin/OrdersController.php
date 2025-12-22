@@ -11,9 +11,27 @@ use App\Models\OrderItem;
 class OrdersController extends Controller
 {
     // List all orders
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::latest()->get();
+        $query = Order::query();
+
+    // Filter by status
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    // Filter by date range
+    if ($request->filled('from')) {
+        $query->whereDate('created_at', '>=', $request->from);
+    }
+
+    if ($request->filled('to')) {
+        $query->whereDate('created_at', '<=', $request->to);
+    }
+
+    $orders = $query->latest()->paginate(10);
+
+   
         return view('admin.sections.orders.orders-section', compact('orders'));
     }
 
@@ -37,10 +55,17 @@ class OrdersController extends Controller
     ]);
 
     //  prevent cancelling delivered orders
-    if ($order->status === 'delivered') {
+    if ($order->status === 'delivered' ) {
         return response()->json([
             'success' => false,
-            'message' => 'Delivered orders cannot be cancelled'
+            'message' => 'Failed to update status!'
+        ], 403);
+    }
+    //  prevent update cancelled orders
+     if ($order->status === 'cancelled' ) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update status!'
         ], 403);
     }
 
@@ -91,6 +116,54 @@ public function invoice(Order $order)
 
     return $pdf->download('order-'.$order->id.'.pdf');
 }
+
+public function export(Request $request)
+{
+    $query = Order::query();
+
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    if ($request->filled('from')) {
+        $query->whereDate('created_at', '>=', $request->from);
+    }
+
+    if ($request->filled('to')) {
+        $query->whereDate('created_at', '<=', $request->to);
+    }
+
+    $orders = $query->get();
+
+    $filename = 'orders_' . now()->format('Y-m-d') . '.csv';
+
+    $headers = [
+        "Content-Type" => "text/csv",
+        "Content-Disposition" => "attachment; filename=$filename",
+    ];
+
+    $callback = function () use ($orders) {
+        $file = fopen('php://output', 'w');
+
+        // CSV header
+        fputcsv($file, ['ID', 'Customer', 'Status', 'Total', 'Date']);
+
+        foreach ($orders as $order) {
+            fputcsv($file, [
+                $order->id,
+                $order->customer_name,
+                $order->status,
+                $order->total_price,
+                $order->created_at->format('Y-m-d'),
+            ]);
+        }
+
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
+
 
 
 
