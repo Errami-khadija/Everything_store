@@ -15,13 +15,30 @@ class CustomerController extends Controller
         ->withSum('orders', 'total_amount')
         ->latest()
         ->get();
-        return view('admin.sections.customers-section', compact('customers'));
+        return view('admin.sections.customers.customers-section', compact('customers'));
     }
 
     public function show($id)
     {
         $customer = Customer::with('orders.items')->findOrFail($id);
-        return view('admin.sections.customers-section', compact('customer'));
+        return view('admin.sections.customers.show', compact('customer'));
     }
+
+    public function toggleBlock(Customer $customer)
+{
+    $customer->update([
+        'is_blocked' => ! $customer->is_blocked
+    ]);
+
+    return back()->with('success', 'Customer status updated.');
+}
+    public function orders($id)
+    {
+        $customer = Customer::findOrFail($id);
+        $orders = $customer->orders()->with('items.product')->latest()->get();
+
+        return view('admin.sections.customers.orders', compact('customer', 'orders'));
+    }
+
 
 }

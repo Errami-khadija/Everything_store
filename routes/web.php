@@ -58,6 +58,9 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
 
     Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customers.index');
     Route::get('/customers/{id}', [CustomerController::class, 'show'])->name('admin.customers.show');
+    Route::put('/customers/{id}/toggle-block', [CustomerController::class, 'toggleBlock'])->name('admin.customers.toggle-block');
+    Route::get('/customers/{id}/orders', [CustomerController::class, 'orders'])->name('admin.customers.orders');
+
 
 
    
