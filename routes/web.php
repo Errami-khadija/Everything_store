@@ -18,14 +18,10 @@ Route::post('/admin/login', [AdminAuthController::class, 'login']);
 
 // Admin Protected Area
 Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
-    // Route::get('/dashboard', function () {
-    // $categories = Category::all();
-    // $products = Product::with('category')->latest()->get();
-    // $category = null;
-    // return view('admin.admin-panel');
-    // });
 
     Route::get('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard.index');
+   
 
      Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('admin.categories.create');
@@ -57,9 +53,14 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     ->name('admin.orders.invoice');
 
     Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customers.index');
+    Route::get('/customers/export', [CustomerController::class, 'export'])->name('admin.customers.export');
     Route::get('/customers/{id}', [CustomerController::class, 'show'])->name('admin.customers.show');
-    Route::put('/customers/{id}/toggle-block', [CustomerController::class, 'toggleBlock'])->name('admin.customers.toggle-block');
+    Route::put('/customers/{customer}/toggle-block', [CustomerController::class, 'toggleBlock'])->name('admin.customers.toggle-block');
     Route::get('/customers/{id}/orders', [CustomerController::class, 'orders'])->name('admin.customers.orders');
+
+     Route::get('/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('admin.analytics.index');
+    Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
+    
 
 
 

@@ -1,5 +1,8 @@
+@extends('admin.layout')
+
+@section('content')
 <!-- Settings Section -->
-   <section id="settingsSection" class="p-6 fade-in hidden">
+   <section id="settingsSection" class="p-6 fade-in">
     <div class="bg-white rounded-xl shadow-sm p-6">
      <h3 class="text-lg font-semibold text-gray-800 mb-6">Store Settings</h3>
      <div class="space-y-6">
@@ -20,3 +23,4 @@
      </div>
     </div>
    </section>
+@endsection

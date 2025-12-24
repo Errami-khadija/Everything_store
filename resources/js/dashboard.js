@@ -23,61 +23,10 @@
             mobileOverlay.classList.add('hidden');
         });
 
-        // Navigation functionality
-        window.showSection = function showSection(sectionName) {
-            // Hide all sections
-            const sections = ['dashboardSection', 'ordersSection', 'productsSection', 'categoriesSection', 'customersSection', 'analyticsSection', 'settingsSection'];
-            sections.forEach(section => {
-                document.getElementById(section).classList.add('hidden');
-            });
 
-            // Show selected section
-            document.getElementById(sectionName + 'Section').classList.remove('hidden');
+   
 
-            localStorage.setItem('activeSection', sectionName);
-
-            // Update page title
-            const titles = {
-                'dashboard': 'Dashboard',
-                'orders': 'Orders Management',
-                'products': 'Products Management',
-                'categories': 'Categories Management',
-                'customers': 'Customers Management',
-                'analytics': 'Analytics & Reports',
-                'settings': 'Store Settings'
-            };
-            document.getElementById('pageTitle').textContent = titles[sectionName];
-
-            // Update active nav item
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active', 'bg-blue-50', 'text-blue-600');
-            });
-            event.target.classList.add('active', 'bg-blue-50', 'text-blue-600');
-
-            // Reset to list views when switching sections
-            if (sectionName === 'orders') {
-                showOrdersList();
-            } else if (sectionName === 'products') {
-                showProductsList();
-            } else if (sectionName === 'categories') {
-                showCategoriesList();
-            } else if (sectionName === 'customers') {
-                showCustomersList();
-            }
-
-            // Close mobile menu
-            if (window.innerWidth < 1024) {
-                sidebar.classList.add('-translate-x-full');
-                mobileOverlay.classList.add('hidden');
-            }
-        }
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-        const savedSection = localStorage.getItem('activeSection') || 'dashboard';
-        showSection(savedSection);
-     });
-
+       
         // Product Management Functions
         window.showAddProduct = function showAddProduct() {
             document.getElementById('productsListView').classList.add('hidden');
@@ -436,52 +385,7 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             }, 3000);
         }
 
-        // Initialize Elements SDK
-        async function onConfigChange(config) {
-            // Update store name
-            const storeName = config.store_name || defaultConfig.store_name;
-            document.getElementById('storeName').textContent = storeName;
-
-            // Update welcome message
-            const welcomeMessage = config.welcome_message || defaultConfig.welcome_message;
-            document.getElementById('welcomeMessage').textContent = welcomeMessage;
-
-            // Update dashboard labels
-            const totalOrdersLabel = config.total_orders_label || defaultConfig.total_orders_label;
-            document.getElementById('totalOrdersLabel').textContent = totalOrdersLabel;
-
-            const pendingOrdersLabel = config.pending_orders_label || defaultConfig.pending_orders_label;
-            document.getElementById('pendingOrdersLabel').textContent = pendingOrdersLabel;
-
-            const totalProductsLabel = config.total_products_label || defaultConfig.total_products_label;
-            document.getElementById('totalProductsLabel').textContent = totalProductsLabel;
-
-            const revenueLabel = config.revenue_label || defaultConfig.revenue_label;
-            document.getElementById('revenueLabel').textContent = revenueLabel;
-        }
-
-        // Initialize the Elements SDK
-        if (window.elementSdk) {
-            window.elementSdk.init({
-                defaultConfig: defaultConfig,
-                onConfigChange: onConfigChange,
-                mapToCapabilities: (config) => ({
-                    recolorables: [],
-                    borderables: [],
-                    fontEditable: undefined,
-                    fontSizeable: undefined
-                }),
-                mapToEditPanelValues: (config) => new Map([
-                    ["store_name", config.store_name || defaultConfig.store_name],
-                    ["welcome_message", config.welcome_message || defaultConfig.welcome_message],
-                    ["total_orders_label", config.total_orders_label || defaultConfig.total_orders_label],
-                    ["pending_orders_label", config.pending_orders_label || defaultConfig.pending_orders_label],
-                    ["total_products_label", config.total_products_label || defaultConfig.total_products_label],
-                    ["revenue_label", config.revenue_label || defaultConfig.revenue_label]
-                ])
-            });
-        }
-
+      
         // Customer Management Functions
         let currentCustomerId = null;
         let currentCustomerData = {};
@@ -491,191 +395,35 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             document.getElementById('customersListView').classList.remove('hidden');
         };
 
-          
+        document.addEventListener('DOMContentLoaded', function () {
+    const forms = document.querySelectorAll('.toggle-customer-form');
 
-       window.blockCustomer = function blockCustomer(customerId) {
-            // Create inline confirmation
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = 'Confirm Block?';
-            button.classList.add('bg-red-800');
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('bg-red-800');
-            }, 3000);
-            
-            // Simulate block after confirmation
-            button.onclick = () => {
-                const customerRow = document.getElementById(`customer-${customerId}`);
-                const statusBadge = customerRow.querySelector('.rounded-full');
-                const actionButton = customerRow.querySelector('button:last-child');
-                
-                // Update status
-                statusBadge.className = 'px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800';
-                statusBadge.textContent = 'Blocked';
-                
-                // Update action button
-                actionButton.textContent = 'Unblock';
-                actionButton.className = 'text-green-600 hover:text-green-900';
-                actionButton.onclick = () => unblockCustomer(customerId);
-                
-                // Add opacity to row
-                customerRow.classList.add('opacity-60');
-                
-                // Update customer type
-                const customerType = customerRow.querySelector('.text-gray-500');
-                customerType.textContent = 'Blocked Customer';
-                
-                showToast(`Customer ${customerId} has been blocked successfully!`, 'success');
-            };
-        }
+    forms.forEach(form => {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // STOP default submit
 
-        window.unblockCustomer =function unblockCustomer(customerId) {
-            // Create inline confirmation
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = 'Confirm Unblock?';
-            button.classList.add('bg-green-800');
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('bg-green-800');
-            }, 3000);
-            
-            // Simulate unblock after confirmation
-            button.onclick = () => {
-                const customerRow = document.getElementById(`customer-${customerId}`);
-                const statusBadge = customerRow.querySelector('.rounded-full');
-                const actionButton = customerRow.querySelector('button:last-child');
-                
-                // Update status
-                statusBadge.className = 'px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800';
-                statusBadge.textContent = 'Active';
-                
-                // Update action button
-                actionButton.textContent = 'Block';
-                actionButton.className = 'text-red-600 hover:text-red-900';
-                actionButton.onclick = () => blockCustomer(customerId);
-                
-                // Remove opacity from row
-                customerRow.classList.remove('opacity-60');
-                
-                // Update customer type based on customer
-                const customerType = customerRow.querySelector('.text-gray-500');
-                if (customerId === 'sarah') {
-                    customerType.textContent = 'Regular Customer';
+            const isBlocked = form.querySelector('button').textContent.includes('Unblock');
+
+            Swal.fire({
+                title: isBlocked ? 'Unblock customer?' : 'Block customer?',
+                text: isBlocked
+                    ? 'This customer will be able to place orders again.'
+                    : 'This customer will no longer be able to place orders.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: isBlocked ? '#16a34a' : '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: isBlocked ? 'Yes, unblock' : 'Yes, block'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); 
                 }
-                
-                showToast(`Customer ${customerId} has been unblocked successfully!`, 'success');
-            };
-        }
+            });
+        });
+    });
+});
 
-      window.toggleCustomerBlock = function toggleCustomerBlock() {
-            if (currentCustomerData.status === 'blocked') {
-                unblockCustomerFromDetails();
-            } else {
-                blockCustomerFromDetails();
-            }
-        }
 
-     window.blockCustomerFromDetails = function blockCustomerFromDetails() {
-            // Create inline confirmation
-            const button = document.getElementById('blockUnblockBtn');
-            const originalText = button.textContent;
-            button.textContent = '🔄 Confirm Block?';
-            button.classList.add('bg-red-800');
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('bg-red-800');
-            }, 3000);
-            
-            // Simulate block after confirmation
-            button.onclick = () => {
-                // Update current customer data
-                currentCustomerData.status = 'blocked';
-                currentCustomerData.type = 'Blocked Customer';
-                
-                // Update UI
-                const statusBadge = document.getElementById('customerStatusBadge');
-                statusBadge.className = 'px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800';
-                statusBadge.textContent = 'Blocked';
-                
-                document.getElementById('customerType').textContent = 'Blocked Customer';
-                
-                button.textContent = '✅ Unblock Customer';
-                button.className = 'w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors';
-                button.onclick = toggleCustomerBlock;
-                
-                // Update avatar color
-                const avatar = document.getElementById('customerAvatar');
-                avatar.className = 'w-16 h-16 bg-gray-500 rounded-full flex items-center justify-center text-white text-2xl font-semibold mr-4';
-                
-                showToast(`Customer has been blocked successfully!`, 'success');
-            };
-        }
-
-       window.unblockCustomerFromDetails = function unblockCustomerFromDetails() {
-            // Create inline confirmation
-            const button = document.getElementById('blockUnblockBtn');
-            const originalText = button.textContent;
-            button.textContent = '🔄 Confirm Unblock?';
-            button.classList.add('bg-green-800');
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('bg-green-800');
-            }, 3000);
-            
-            // Simulate unblock after confirmation
-            button.onclick = () => {
-                // Update current customer data
-                currentCustomerData.status = 'active';
-                currentCustomerData.type = 'Regular Customer';
-                
-                // Update UI
-                const statusBadge = document.getElementById('customerStatusBadge');
-                statusBadge.className = 'px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800';
-                statusBadge.textContent = 'Active';
-                
-                document.getElementById('customerType').textContent = 'Regular Customer';
-                
-                button.textContent = '🚫 Block Customer';
-                button.className = 'w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors';
-                button.onclick = toggleCustomerBlock;
-                
-                // Update avatar color (restore original color based on customer)
-                const avatar = document.getElementById('customerAvatar');
-                if (currentCustomerId === 'sarah') {
-                    avatar.className = 'w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center text-white text-2xl font-semibold mr-4';
-                }
-                
-                showToast(`Customer has been unblocked successfully!`, 'success');
-            };
-        }
-
-        function sendCustomerEmail() {
-            showToast('Sending email to customer...', 'info');
-            setTimeout(() => {
-                showToast('Email sent successfully!', 'success');
-            }, 2000);
-        }
-
-        function sendCustomerSMS() {
-            showToast('Sending SMS to customer...', 'info');
-            setTimeout(() => {
-                showToast('SMS sent successfully!', 'success');
-            }, 2000);
-        }
-
-       window.viewCustomerOrders = function viewCustomerOrders() {
-            showToast('Redirecting to customer orders...', 'info');
-            setTimeout(() => {
-                showSection('orders');
-                showToast('Showing orders for this customer', 'success');
-            }, 1000);
-        }
 
         function saveCustomerNotes() {
             const notes = document.getElementById('customerNotesInput').value;
@@ -861,7 +609,5 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             }
         }, 30000);
 
-        // Initialize with default config
-        onConfigChange(defaultConfig);
 
 (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99f9c6ea14dee280',t:'MTc2MzMyNTM0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();

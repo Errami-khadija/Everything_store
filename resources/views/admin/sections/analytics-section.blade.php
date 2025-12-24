@@ -1,5 +1,8 @@
- <!-- Analytics Section -->
-   <section id="analyticsSection" class="p-6 fade-in hidden">
+@extends('admin.layout')
+
+@section('content')
+<!-- Analytics Section -->
+   <section id="analyticsSection" class="p-6 fade-in">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
      <div class="bg-white rounded-xl shadow-sm p-6">
       <h3 class="text-lg font-semibold text-gray-800 mb-4">Revenue Analytics</h3>
@@ -20,3 +23,4 @@
      </div>
     </div>
    </section>
+@endsection

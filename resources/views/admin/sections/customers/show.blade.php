@@ -118,8 +118,11 @@
             class="w-full block text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
             📋 View All Orders
            </a>
-            <form action="{{ route('admin.customers.toggle-block', $customer->id) }}"
-      method="POST">
+  <form
+    action="{{ route('admin.customers.toggle-block', $customer->id) }}"
+    method="POST"
+    class="toggle-customer-form"
+>
     @csrf
     @method('PUT')
 
@@ -128,37 +131,17 @@
         class="
             w-full py-2 px-4 rounded-lg text-white transition-colors
             {{ $customer->is_blocked
-        ? 'bg-red-600 hover:bg-red-700'
-        : 'bg-green-600 hover:bg-green-700' }}
+        ? 'bg-green-600 hover:bg-green-700'
+        : 'bg-red-600 hover:bg-red-700' }}
         ">
 
         {{ $customer->is_blocked ? '✅ Unblock Customer' : '🚫 Block Customer' }}
     </button>
 </form>
          </div>
-        </div><!-- Customer Notes -->
-        <div class="bg-gray-50 rounded-lg p-6">
-         <h4 class="text-lg font-semibold text-gray-800 mb-4">Customer Notes</h4><!-- Current Saved Notes Display -->
-         <div id="currentCustomerNotes" class="mb-4 p-3 bg-white border border-gray-200 rounded-lg">
-          <div class="flex items-center justify-between mb-2"><span class="text-sm font-medium text-gray-700">Current Notes:</span> <span class="text-xs text-gray-500">Last updated: Jan 10, 2024</span>
-          </div>
-          <p class="text-gray-900 text-sm">Premium customer with excellent payment history. Prefers COD delivery. Usually orders electronics and books.</p>
-         </div><!-- Edit Notes Section -->
-         <div><label class="block text-sm font-medium text-gray-700 mb-2">Update Notes:</label> <textarea id="customerNotesInput" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="4" placeholder="Add notes about this customer...">Premium customer with excellent payment history. Prefers COD delivery. Usually orders electronics and books.</textarea> <button onclick="saveCustomerNotes()" class="w-full mt-3 bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"> Save Notes </button>
-         </div>
-        </div><!-- Customer Preferences -->
-        <div class="bg-gray-50 rounded-lg p-6">
-         <h4 class="text-lg font-semibold text-gray-800 mb-4">Preferences</h4>
-         <div class="space-y-3">
-          <div class="flex justify-between items-center"><span class="text-gray-600">Preferred Payment:</span> <span class="font-semibold text-gray-900">Cash on Delivery</span>
-          </div>
-          <div class="flex justify-between items-center"><span class="text-gray-600">Email Notifications:</span> <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Enabled</span>
-          </div>
-          <div class="flex justify-between items-center"><span class="text-gray-600">SMS Notifications:</span> <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Enabled</span>
-          </div>
-          <div class="flex justify-between items-center"><span class="text-gray-600">Marketing Emails:</span> <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Disabled</span>
-          </div>
-         </div>
+        </div>
+
+       
         </div>
        </div>
       </div>

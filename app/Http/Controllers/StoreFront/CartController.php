@@ -113,7 +113,7 @@ public function checkout(Request $request)
         return response()->json(['message' => 'Cart is empty'], 400);
     }
 
-    // 0️⃣ Validate request
+    // Validate request
     $request->validate([
         'name' => 'required|string',
         'phone' => 'required|string',
@@ -121,21 +121,32 @@ public function checkout(Request $request)
         'address' => 'nullable|string',
     ]);
 
-    // 1️⃣ Find or create customer (by phone)
+     // Check if customer already exists (by phone)
+    $existingCustomer = \App\Models\Customer::where('phone', $request->phone)->first();
+
+    //BLOCKED CUSTOMER CHECK
+    if ($existingCustomer && $existingCustomer->is_blocked) {
+        return response()->json([
+            'message' => 'Your account is blocked. You cannot place an order.'
+        ], 403);
+    }
+
+    //  Find or create customer (by phone)
     $customer = \App\Models\Customer::firstOrCreate(
         ['phone' => $request->phone],
         [
             'name' => $request->name,
             'city' => $request->city,
             'address' => $request->address,
+            'is_blocked' => 0,
         ]
     );
 
-    // 2️⃣ Calculate totals
+    //  Calculate totals
     $totalItems = array_sum(array_column($cart, 'quantity'));
     $totalAmount = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
 
-    // 3️⃣ Create order
+    // Create order
     $order = \App\Models\Order::create([
          'customer_id' => $customer->id,
     'customer_name' => $customer->name,     
@@ -147,7 +158,7 @@ public function checkout(Request $request)
     'status' => 'pending',
     ]);
 
-    // 4️⃣ Create order items
+    //  Create order items
     foreach ($cart as $item) {
         $order->items()->create([
             'product_id' => $item['id'],
@@ -160,7 +171,7 @@ public function checkout(Request $request)
         ]);
     }
 
-    // 5️⃣ Clear cart
+    // Clear cart
     session()->forget('cart');
 
     return response()->json([

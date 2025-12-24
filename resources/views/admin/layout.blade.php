@@ -9,6 +9,8 @@
 
     @yield('content')
 </main>
+
+
  <!-- Mobile Overlay -->
   <div id="mobileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden hidden"></div>
 </body>
