@@ -7,7 +7,7 @@
    <!-- Sidebar -->
   <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white shadow-xl transform -translate-x-full lg:translate-x-0 sidebar-transition z-40">
    <div class="p-6 border-b border-gray-200">
-    <h1 id="storeName" class="text-2xl font-bold text-gray-800">Everything Store</h1>
+    <h1 id="storeName" class="text-2xl font-bold text-gray-800"> {{ $settings->store_name ?? 'Everything Store' }}</h1>
     <p class="text-sm text-gray-600 mt-1">Admin Panel</p>
    </div>
    <nav class="mt-6">

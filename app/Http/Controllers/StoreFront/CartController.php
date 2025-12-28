@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Admin;
+
+use App\Notifications\NewOrderNotification;
 
 class CartController extends Controller
 {
@@ -173,6 +176,13 @@ public function checkout(Request $request)
 
     // Clear cart
     session()->forget('cart');
+
+    // Notify admin about the new order
+$admin = Admin::first(); 
+if ($admin) {
+    $admin->notify(new NewOrderNotification($order)); 
+}
+
 
     return response()->json([
         'message' => 'Order placed successfully',

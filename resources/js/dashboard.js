@@ -468,7 +468,7 @@ window.addSpecificationEdit = function addSpecificationEdit() {
         }
 
         // Notification System Functions
-        function toggleNotifications() {
+      window.toggleNotifications = function toggleNotifications() {
             const dropdown = document.getElementById('notificationsDropdown');
             dropdown.classList.toggle('hidden');
             
@@ -480,7 +480,7 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             }
         }
 
-        function closeNotificationsOnOutsideClick(event) {
+      window.closeNotificationsOnOutsideClick = function closeNotificationsOnOutsideClick(event) {
             const dropdown = document.getElementById('notificationsDropdown');
             const button = document.getElementById('notificationBtn');
             
@@ -490,89 +490,8 @@ window.addSpecificationEdit = function addSpecificationEdit() {
             }
         }
 
-        function markAllAsRead() {
-            // Mark all notifications as read
-            const unreadNotifications = document.querySelectorAll('.notification-item:not(.opacity-60)');
-            unreadNotifications.forEach(notification => {
-                notification.classList.add('opacity-60');
-                const dot = notification.querySelector('.bg-red-500, .bg-orange-500, .bg-green-500');
-                if (dot) {
-                    dot.className = 'w-2 h-2 bg-gray-300 rounded-full mt-2 shrink-0';
-                }
-                const title = notification.querySelector('.text-gray-900');
-                if (title) {
-                    title.className = 'text-sm font-medium text-gray-700';
-                }
-                const description = notification.querySelector('.text-gray-600');
-                if (description) {
-                    description.className = 'text-sm text-gray-500';
-                }
-                const time = notification.querySelector('.text-gray-500');
-                if (time) {
-                    time.className = 'text-xs text-gray-400 mt-1';
-                }
-            });
-            
-            // Update notification badge
-            const badge = document.getElementById('notificationBadge');
-            badge.textContent = '0';
-            badge.classList.add('hidden');
-            
-            showToast('All notifications marked as read!', 'success');
-        }
+      
 
-        function handleNotificationClick(notificationType) {
-            // Handle different notification types
-            switch(notificationType) {
-                case 'order-pending':
-                    showSection('orders');
-                    viewOrder('ORD-001');
-                    showToast('Navigated to pending order', 'info');
-                    break;
-                case 'stock-low':
-                    showSection('products');
-                    showToast('Showing products with low stock', 'info');
-                    break;
-                case 'customer-new':
-                    showSection('customers');
-                    viewCustomer('mike');
-                    showToast('Showing new customer details', 'info');
-                    break;
-                case 'order-delivered':
-                    showSection('orders');
-                    showToast('Showing delivered orders', 'info');
-                    break;
-                case 'payment-received':
-                    showSection('orders');
-                    showToast('Showing payment information', 'info');
-                    break;
-                default:
-                    showToast('Notification clicked', 'info');
-            }
-            
-            // Mark this notification as read
-            const clickedNotification = event.currentTarget;
-            if (!clickedNotification.classList.contains('opacity-60')) {
-                clickedNotification.classList.add('opacity-60');
-                const dot = clickedNotification.querySelector('.bg-red-500, .bg-orange-500, .bg-green-500');
-                if (dot) {
-                    dot.className = 'w-2 h-2 bg-gray-300 rounded-full mt-2 shrink-0';
-                }
-                
-                // Update notification count
-                const badge = document.getElementById('notificationBadge');
-                const currentCount = parseInt(badge.textContent);
-                const newCount = Math.max(0, currentCount - 1);
-                badge.textContent = newCount;
-                
-                if (newCount === 0) {
-                    badge.classList.add('hidden');
-                }
-            }
-            
-            // Close dropdown
-            document.getElementById('notificationsDropdown').classList.add('hidden');
-        }
 
         function viewAllNotifications() {
             showToast('Opening full notifications panel...', 'info');

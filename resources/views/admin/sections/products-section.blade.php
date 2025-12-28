@@ -1,5 +1,8 @@
 @extends('admin.layout')
 
+@section('page-title', 'Products')
+@section('page-subtitle', 'Manage your store products')
+
 @section('content')
 
 <!-- Products Section -->

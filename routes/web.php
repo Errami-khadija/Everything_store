@@ -7,6 +7,9 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Models\Category;
 use App\Models\Product;
 
@@ -20,7 +23,7 @@ Route::post('/admin/login', [AdminAuthController::class, 'login']);
 Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
 
     Route::get('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
-    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard.index');
    
 
      Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
@@ -58,8 +61,15 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     Route::put('/customers/{customer}/toggle-block', [CustomerController::class, 'toggleBlock'])->name('admin.customers.toggle-block');
     Route::get('/customers/{id}/orders', [CustomerController::class, 'orders'])->name('admin.customers.orders');
 
-     Route::get('/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('admin.analytics.index');
-    Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics.index');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
+
+    Route::post('/notifications/read', function () {
+    auth('admin')->user()->unreadNotifications->markAsRead();
+    return back();
+})->name('admin.notifications.read');
+
     
 
 

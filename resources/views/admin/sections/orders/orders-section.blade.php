@@ -1,4 +1,6 @@
 @extends('admin.layout')
+@section('page-title', 'Orders')
+@section('page-subtitle', 'Manage your store orders')
 
 @section('content')
 

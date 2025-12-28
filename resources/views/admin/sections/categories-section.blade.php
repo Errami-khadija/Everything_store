@@ -1,5 +1,9 @@
 @extends('admin.layout')
 
+@section('page-title', 'Categories')
+@section('page-subtitle', 'Organize your products')
+
+
 @section('content')
 
 <!-- Categories Section -->

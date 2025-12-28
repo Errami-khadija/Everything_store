@@ -5,7 +5,10 @@
 @include('admin.components.aside')
 
 <main class="lg:ml-64 min-h-full">
-    @include('admin.components.header')
+    @include('admin.components.header', [
+    'pageTitle' => trim($__env->yieldContent('page-title')) ?: 'Dashboard',
+    'pageSubtitle' => trim($__env->yieldContent('page-subtitle')) ?: 'Welcome back, Admin!'
+])
 
     @yield('content')
 </main>

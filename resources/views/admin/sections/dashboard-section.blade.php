@@ -1,5 +1,9 @@
 @extends('admin.layout')
 
+@section('page-title', 'Dashboard')
+@section('page-subtitle', 'Overview of your store performance')
+
+
 @section('content')
 <!-- Dashboard Section -->
    <section id="dashboardSection" class="p-6 fade-in"><!-- Stats Cards -->

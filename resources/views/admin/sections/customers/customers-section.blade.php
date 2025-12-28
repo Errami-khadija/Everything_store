@@ -1,4 +1,6 @@
 @extends('admin.layout')
+@section('page-title', 'Customers')
+@section('page-subtitle', 'Manage your store customers')
 
 @section('content')
  <!-- Customers Section -->
