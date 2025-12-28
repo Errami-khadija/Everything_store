@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\View;
 use App\Models\Setting;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\Notification;
+use Illuminate\Notifications\DatabaseNotification;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -26,18 +26,16 @@ class ViewServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('admin.components.header', function ($view) {
-            $admin = Auth::guard('admin')->user(); 
+  
+        $notifications = DatabaseNotification::where('read_at', null)
+            ->latest()
+            ->get();
 
-        $notifications = $admin
-            ? $admin->notifications()->latest()->take(5)->get()
-            : collect(); 
-
-        $unreadCount = $admin
-            ? $admin->unreadNotifications()->count()
-            : 0;
-
-        $view->with(compact('notifications', 'unreadCount'));
-    });
+        $unreadCount = DatabaseNotification::whereNull('read_at')
+            ->count();
+ 
+    $view->with(compact('notifications', 'unreadCount'));
+   });
   View::composer('admin.*', function ($view) {
         $view->with('settings', Setting::first());
     });

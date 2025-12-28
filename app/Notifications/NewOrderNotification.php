@@ -29,7 +29,7 @@ class NewOrderNotification extends Notification
         return ['database'];
     }
 
-     public function toDatabase($notifiable)
+     public function toDatabase($notifiable): array
     {
         return [
         'title'   => 'New Order Received',

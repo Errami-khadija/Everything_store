@@ -32,8 +32,7 @@
          </div>
         </div>
         <div class="max-h-96 overflow-y-auto">
-       @forelse($notifications ?? collect() as $notification)
-
+        @forelse($notifications as $notification)
 <div class="p-4 border-b hover:bg-gray-50 cursor-pointer
      {{ $notification->read_at ? 'opacity-60' : '' }}"
      onclick="window.location='{{ $notification->data['url'] ?? '#' }}'">
@@ -55,9 +54,6 @@
 @endforelse
 
    
-        </div>
-        <div class="p-4 border-t border-gray-200">
-        <button onclick="viewAllNotifications()" class="w-full text-center text-sm text-blue-600 hover:text-blue-800 font-medium"> View All Notifications </button>
         </div>
        </div>
       </div>
