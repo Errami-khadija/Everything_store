@@ -70,15 +70,6 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     return back();
 })->name('admin.notifications.read');
 
-    
-
-
-
-   
-
-
-
-
 
 
 });

@@ -33,6 +33,6 @@ class HomeController extends Controller
     ->latest()
     ->get();
 
-    return view('shop.shop', compact('categories','products','newProducts','featuredProducts'));
+    return view('storeFront.index', compact('categories','products','newProducts','featuredProducts'));
 }
 }
