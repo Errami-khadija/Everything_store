@@ -348,7 +348,7 @@
 
  document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const response = await fetch("/cart/json"); // <-- use the JSON endpoint
+        const response = await fetch("/cart/json");
         const data = await response.json();
 
         updateCartPopup(data.cart, data.totalItems, data.totalPrice);

@@ -1,28 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    var form = document.querySelector("form");
-
-    form?.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        var formData = new FormData(form);
-
-        fetch("contact.php", {
-            method: "POST",
-            body: formData
-        })
-            .then(response => response.text())
-            .then(result => {
-                if (result === "Success") {
-                    showNotification("Message sent successfully", "success");
-                } else {
-                    showNotification("Error: Unable to send message", "error");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                showNotification("Error: Something went wrong", "error");
-            });
-    });
 
     function showNotification(message, type) {
         toastr.options = {
@@ -44,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
             toastr.error(message, "", { className: "toast-error" });
         }
     }
-});
 
 // ================== portfolio filter ====================== //
 
@@ -179,3 +153,6 @@ $(document).ready(function () {
 });
 
 
+// ------------- End of numbers counter -----------------//
+
+// ============== start shopping cart and Checkout============== //
