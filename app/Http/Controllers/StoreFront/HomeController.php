@@ -35,4 +35,16 @@ class HomeController extends Controller
 
     return view('storeFront.index', compact('categories','products','newProducts','featuredProducts'));
 }
+    public function show(Product $product)
+    {    
+        $relatedProducts = Product::where('category_id', $product->category_id)
+                                  ->where('id', '!=', $product->id)
+                                  ->where('status', 'active')
+                                  ->latest()
+                                  ->take(4)
+                                  ->get();
+
+
+        return view('storefront.product', compact('product', 'relatedProducts'));
+    }
 }

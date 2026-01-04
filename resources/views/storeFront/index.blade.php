@@ -266,7 +266,7 @@
             <h4 class="category">{{ $product->category->name ?? 'No Category' }}</h4>
             <img class="product-img" src="{{ asset('uploads/products/' . $product->images[0]) }}" alt="product">
             <div class="d-flex flex-row justify-content-between padding-16">
-              <a href="product.html">
+              <a href="{{ route('product.show', $product->id) }}">
                 <h3 class="heading-4">{{ $product->name }}</h3>
               </a>
               <h3 class="heading-3 ">${{ number_format($product->price, 2) }}</h3>
@@ -310,7 +310,7 @@
                 <img class="product-img" src="{{ asset('uploads/products/' . $product->images[0]) }}" alt="product">
                  
                 <div class="d-flex flex-row justify-content-between padding-16">
-                  <a href="product.html">
+                  <a href="{{ route('product.show', $product->id) }}">
                     <h3 class="heading-4">{{ $product->name }}</h3>
                   </a>
                   <h3 class="heading-3 grey-text">${{ number_format($product->price, 2) }}</h3>
@@ -356,7 +356,7 @@
                 <img class="product-img" src="{{ asset('uploads/products/' . $product->images[0]) }}" alt="product">
                  
                 <div class="d-flex flex-row justify-content-between padding-16">
-                  <a href="product.html">
+                  <a href="{{ route('product.show', $product->id) }}">
                     <h3 class="heading-4">{{ $product->name }}</h3>
                   </a>
                   <h3 class="heading-3 grey-text">${{ number_format($product->price, 2) }}</h3>

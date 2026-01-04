@@ -82,6 +82,8 @@ Route::post('/cart/update', [CartController::class, 'update']);
 Route::post('/cart/remove', [CartController::class, 'remove']);
 Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 Route::get('/thank-you', [CartController::class, 'thankYou'])->name('cart.thankyou');
+Route::get('/products/{product}', [HomeController::class, 'show'])->name('product.show');
+
 
 
 

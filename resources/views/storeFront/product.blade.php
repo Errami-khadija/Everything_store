@@ -2,29 +2,30 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TickHub - Electronics Store Ecommerce Website Template">
-    <!-- fav icon -->
-    <link rel="icon" href="images/favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TickHub - Electronics Store Ecommerce Website Template">
 
-    <!-- bootstarp css file -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
 
-    <!--  owl carousel file     -->
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
+  <!-- bootstrap css -->
+  <link rel="stylesheet" href="{{ asset('css/storeFront css/bootstrap.min.css') }}">
 
-    <!--  toasts file     -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+  <!-- owl carousel -->
+  <link rel="stylesheet" href="{{ asset('css/storeFront css/owl.carousel.min.css') }}">
 
-    <!-- fontawesome icons -->
-    <link rel="stylesheet" href="css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- toastr -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
-    <!-- main css file -->
-    <link rel="stylesheet" href="css/styles.css">
-    <title>TickHub - Electronics Store Ecommerce Website Template</title>
+  <!-- fontawesome -->
+  <link rel="stylesheet" href="{{ asset('css/storeFront css/all.min.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- main css -->
+  <link rel="stylesheet" href="{{ asset('css/storeFront css/styles.css') }}">
+
+  <title>TickHub - Electronics Store Ecommerce Website Template</title>
 </head>
 
 <body class="body">
@@ -187,80 +188,92 @@
     <section class="section product">
         <div class="container">
             <div class="d-flex flex-column gap-32">
-                <p class="body-1">Store > Accessory > <span class="primary-text fw-bold">Tech Chic</span></p>
+                <p class="body-1">Store > {{ $product->category->name }} > <span class="primary-text fw-bold">{{ $product->name }}</span></p>
                 <div class="row g-4 justify-content-center align-items-center">
                     <div class="col-lg-6 col-12">
                         <div class="d-flex flex-column gap-16">
-                            <img src="images/products/3.png" alt="product">
+                             <img src="{{ asset('uploads/products/' . $product->images[0]) }}">
                             <div class="row g-3">
-                                <div class="img col-3 b-radius">
-                                    <img src="images/products/1.png" alt="product">
-                                </div>
-                                <div class="img col-3 b-radius">
-                                    <img src="images/products/4.png" alt="product">
-                                </div>
-                                <div class="img col-3 b-radius">
-                                    <img src="images/products/5.png" alt="product">
-                                </div>
-                                <div class="img col-3 b-radius">
-                                    <img src="images/products/6.png" alt="product">
-                                </div>
+                                @foreach($product->images as $image)
+                                    <div class="img col-3 b-radius">
+                                        <img src="{{ asset('uploads/products/' . $image) }}" alt="{{ $product->name }}">
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-12">
                         <div class="d-flex flex-column gap-16">
                             <div class="d-flex flex-column">
-                                <h6 class="heading-4 m-0 p-0">Zenith Horizon</h6>
-                                <p class="body-2">classic sophistication with modern aesthetics.</p>
+                                <h6 class="heading-4 m-0 p-0">{{ $product->name }}</h6>
+                                <p class="body-2">{{ $product->description }}</p>
                                 <hr>
                             </div>
                             <div class="d-flex flex-column gap-16">
-                                <h2 class="heading-2">$49.00</h2>
+                                <h2 class="heading-2">${{ number_format($product->price, 2) }}</h2>
                                 <div class="d-flex gap-8">
                                     <button class="btn">checkout now</button>
-                                    <button class="btn-outline add-to-cart">Add to cart</button>
+                                    <button class="btn-outline add-to-cart"  data-id="{{ $product->id }}">Add to cart</button>
                                 </div>
                                 <hr>
                             </div>
                             <div class="d-flex flex-column gap-8">
-                                <div class="d-flex justify-content-start  gap-16">
-                                    <i class="fa-solid fa-check icon-sm primary-text"></i>
-                                    <p class="body-1">Eternal Elegance: A timeless design that seamlessly blends classic
-                                        sophistication with modern aesthetics.</p>
-                                </div>
-                                <div class="d-flex justify-content-start  gap-16">
-                                    <i class="fa-solid fa-check icon-sm primary-text"></i>
-                                    <p class="body-1">Smart Precision: Advanced technology for precise timekeeping and
-                                        smart functionalities, keeping you in sync with the future.</p>
-                                </div>
-                                <div class="d-flex justify-content-start  gap-16">
-                                    <i class="fa-solid fa-check icon-sm primary-text"></i>
-                                    <p class="body-1">Eternal Elegance: A timeless design that seamlessly blends classic
-                                        sophistication with modern aesthetics.</p>
-                                </div>
-                                <div class="d-flex justify-content-start  gap-16">
-                                    <i class="fa-solid fa-check icon-sm primary-text"></i>
-                                    <p class="body-1">Engineered with premium materials, ensuring resilience and style
-                                        that withstands the test of time.</p>
-                                </div>
+                                 @if(!empty($product->specifications))
+        @foreach($product->specifications as $spec)
+            <div class="d-flex justify-content-start gap-16">
+                <i class="fa-solid fa-check icon-sm primary-text"></i>
+                <p class="body-1">{{ $spec['name']}} : {{ $spec['value'] }}</p>
+            </div>
+        @endforeach
+    @else
+        <p class="text-muted">No specifications available.</p>
+    @endif
                             </div>
-                            <div
-                                class="d-flex flex-lg-row flex-md-row flex-column justify-content-between align-items-center">
-                                <p class="body-1">Accepted payments methods</p>
-                                <div class="d-flex gap-8">
-                                    <i class="fa-brands fa-cc-stripe icon-lg"></i>
-                                    <i class="fa-brands fa-cc-paypal icon-lg"></i>
-                                    <i class="fa-brands fa-cc-mastercard icon-lg"></i>
-                                    <i class="fa-brands fa-cc-visa icon-lg"></i>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- ============== start related products section ========== -->
+     <section class="bestsellers section position-relative pt-4 mt-4" id="bestsellers">
+    <div class="container d-flex flex-column gap-64">
+      <div class="heading row justify-content-between align-items-start g-4">
+        <div class="d-flex flex-column align-items-start justify-content-start gap-8 col-lg-6 col-12">
+          <h1 class="heading-1">Related Products</h1>
+          <p class="body-1">browse favorite sale styles and brands</p>
+        </div>
+        <div class="col-lg-6 col-12 d-flex justify-content-lg-end justify-content-start">
+          <a href="store.html" class="learn-more">Browse All Products <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="row g-4">
+          @foreach($relatedProducts as $product)
+        <div class="col-lg-3 col-md-6 col-12">
+          <div class="bg-box d-flex flex-column gap-16 position-relative b-radius">
+            <h4 class="category">{{ $product->category->name ?? 'No Category' }}</h4>
+            <img class="product-img" src="{{ asset('uploads/products/' . $product->images[0]) }}" alt="product">
+            <div class="d-flex flex-row justify-content-between padding-16">
+              <a href="{{ route('product.show', $product->id) }}">
+                <h3 class="heading-4">{{ $product->name }}</h3>
+              </a>
+              <h3 class="heading-3 ">${{ number_format($product->price, 2) }}</h3>
+            </div>
+          <button class="btn add-to-cart-btn px-4 py-2 rounded-lg font-medium transition-colors"
+                             data-id="{{ $product->id }}">
+                                Add to Cart
+                            </button>
+            
+          </div>
+        </div>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
+    <!-- ============== End related products section ========== -->
 
 
     <!-- ============== start testimonials section ========== -->
@@ -278,7 +291,7 @@
                                 <div class="d-flex align-items-center justify-content-between gap-8 text">
                                     <div class="d-flex justify-content-center align-items-center gap-8">
                                         <div class="img">
-                                            <img src="images/testimonials/testimonials-1.jpg" alt="testimonial"
+                                            <img src="{{ asset('images/testimonials/testimonials-1.jpg') }}" alt="testimonial"
                                                 class="b-radius">
                                         </div>
                                         <h3 class="heading-3 m-0 p-0">John Doe</h3>
@@ -307,7 +320,7 @@
                                 <div class="d-flex align-items-center justify-content-between gap-8 text">
                                     <div class="d-flex justify-content-center align-items-center gap-8">
                                         <div class="img">
-                                            <img src="images/testimonials/testimonials-2.jpg" alt="testimonial"
+                                            <img src="{{ asset('images/testimonials/testimonials-2.jpg') }}" alt="testimonial"
                                                 class="b-radius">
                                         </div>
                                         <h3 class="heading-3 m-0 p-0">robert alderson</h3>
@@ -336,7 +349,7 @@
                                 <div class="d-flex align-items-center justify-content-between gap-8 text">
                                     <div class="d-flex justify-content-center align-items-center gap-8">
                                         <div class="img">
-                                            <img src="images/testimonials/testimonials-3.jpg" alt="testimonial"
+                                            <img src="{{ asset('images/testimonials/testimonials-3.jpg') }}" alt="testimonial"
                                                 class="b-radius">
                                         </div>
                                         <h3 class="heading-3 m-0 p-0">sarah lee</h3>
@@ -367,7 +380,7 @@
                                 <div class="d-flex align-items-center justify-content-between gap-8 text">
                                     <div class="d-flex justify-content-center align-items-center gap-8">
                                         <div class="img">
-                                            <img src="images/testimonials/testimonials-4.jpg" alt="testimonial"
+                                            <img src="{{ asset('images/testimonials/testimonials-4.jpg') }}" alt="testimonial"
                                                 class="b-radius">
                                         </div>
                                         <h3 class="heading-3 m-0 p-0">james white</h3>
@@ -469,27 +482,26 @@
     <!-- ============== end footer section ========== -->
 
     <!--  JQuery file     -->
-    <script src="js/jquery-3.6.1.min.js"></script>
+    <script src="{{ asset('js/storeFront js/jquery-3.6.1.min.js') }}"></script>
 
     <!--  toasts file     -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <!--  owl carousel file     -->
-    <script src="js/owl.carousel.min.js"></script>
+    <script src="{{ asset('js/storeFront js/owl.carousel.min.js') }}"></script>
 
     <!--  isotope filter file     -->
-    <script src="js/isotope.min.js"></script>
+    <script src="{{ asset('js/storeFront js/isotope.min.js') }}"></script>
 
     <!--  bootstrap bundle js file     -->
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/storeFront js/bootstrap.bundle.min.js') }}"></script>
 
     <!--  counter     -->
-    <script src="js/jquery.counterup.min.js"></script>
-    <script src="js/jquery.waypoints.js"></script>
+    <script src="{{ asset('js/storeFront js/jquery.counterup.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.waypoints.js') }}"></script>
 
     <!--  main js file  -->
-    <script src="js/main.js"></script>
-
+    <script src="{{ asset('js/storeFront js/main.js') }}"></script>
 </body>
 
 </html>
