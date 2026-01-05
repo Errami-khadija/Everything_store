@@ -1,11 +1,11 @@
-@include('admin.components.head')
+@include('components.admin.head')
 
 <body class="bg-gray-50 font-sans">
 
-@include('admin.components.aside')
+@include('components.admin.aside')
 
 <main class="lg:ml-64 min-h-full">
-    @include('admin.components.header', [
+    @include('components.admin.header', [
     'pageTitle' => trim($__env->yieldContent('page-title')) ?: 'Dashboard',
     'pageSubtitle' => trim($__env->yieldContent('page-subtitle')) ?: 'Welcome back, Admin!'
 ])

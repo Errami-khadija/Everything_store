@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('page-title', 'Store Settings')
 @section('page-subtitle', 'Update your store configuration')

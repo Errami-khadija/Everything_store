@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('page-title', 'Products')
 @section('page-subtitle', 'Manage your store products')

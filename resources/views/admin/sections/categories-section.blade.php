@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('page-title', 'Categories')
 @section('page-subtitle', 'Organize your products')

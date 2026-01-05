@@ -83,6 +83,23 @@ Route::post('/cart/remove', [CartController::class, 'remove']);
 Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 Route::get('/thank-you', [CartController::class, 'thankYou'])->name('cart.thankyou');
 Route::get('/products/{product}', [HomeController::class, 'show'])->name('product.show');
+Route::get('/store', [HomeController::class, 'showStore'])->name('store');
+Route::get('/about', function () {
+    return view('storeFront.about');
+})->name('about');
+Route::get('/services', function () {
+    return view('storeFront.services');
+})->name('services');
+Route::get('/contact', function () {
+    return view('storeFront.contact');
+})->name('contact');
+Route::get('/privacy-policy', function () {
+    return view('storeFront.privacy-policy');
+})->name('privacy-policy');
+Route::get('/terms', function () {
+    return view('storeFront.terms');
+})->name('terms');
+
 
 
 

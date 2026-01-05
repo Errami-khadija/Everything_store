@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Everything Store</title>
+    <title>Admin Login - {{ $settings->store_name ?? 'Everything Store' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
@@ -37,7 +37,7 @@
             </button>
         </form>
 
-        <p class="text-center text-gray-500 text-sm mt-4">&copy; 2025 Everything Store</p>
+        <p class="text-center text-gray-500 text-sm mt-4">&copy; 2025 {{ $settings->store_name ?? 'Everything Store' }} Store</p>
     </div>
 
 </body>

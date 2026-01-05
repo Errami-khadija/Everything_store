@@ -25,8 +25,8 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer('admin.components.header', function ($view) {
-  
+        View::composer('components.admin.header', function ($view) {
+
         $notifications = DatabaseNotification::where('read_at', null)
             ->latest()
             ->get();
@@ -36,7 +36,7 @@ class ViewServiceProvider extends ServiceProvider
  
     $view->with(compact('notifications', 'unreadCount'));
    });
-  View::composer('admin.*', function ($view) {
+  View::composer('*', function ($view) {
         $view->with('settings', Setting::first());
     });
 

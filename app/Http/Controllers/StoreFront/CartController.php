@@ -49,7 +49,7 @@ class CartController extends Controller
     public function index()
     {
         $cart = session('cart', []);
-        return view('shop.shop', compact('cart'));
+        return view('components.header', compact('cart'));
     }
 
     public function update(Request $request)

@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('page-title', 'Dashboard')
 @section('page-subtitle', 'Overview of your store performance')
