@@ -29,8 +29,9 @@
                 </div>
             </div>
             <div class="col-lg-6 col-12">
-                <form class="main-form d-flex flex-column gap-16" id="contact-us-form" action="contact.php"
-                    method="post">
+                <form class="main-form d-flex flex-column gap-16" id="contact-us-form" action="{{ route('contact.store') }}"
+                    method="POST">
+                     @csrf
                     <div class="col-12">
                         <div class="row g-3">
                             <div class="col-lg-6 col-12">
@@ -60,4 +61,17 @@
             allowfullscreen=""></iframe>
     </section>
 @include('components.store.faq')
+
+
+@if(session('toast_message'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        showNotification(
+            @json(session('toast_message')),
+            @json(session('toast_type'))
+        );
+    });
+</script>
+@endif
+
 @endsection

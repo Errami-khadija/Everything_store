@@ -10,7 +10,7 @@
             extendedTimeOut: 1000,
         };
 
-        toastr.clear(); // Clear any existing toasts
+        toastr.clear(); 
 
 
         if (type === "success") {
@@ -20,7 +20,7 @@
         }
     }
 
-// ================== portfolio filter ====================== //
+// ================== products filter ====================== //
 
 $(document).ready(function () {
 

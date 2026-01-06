@@ -15,6 +15,7 @@ use App\Models\Product;
 
 use App\Http\Controllers\StoreFront\HomeController;
 use App\Http\Controllers\StoreFront\CartController;
+use App\Http\Controllers\StoreFront\ContactController;
 // Admin Login
 Route::get('/admin/login', [AdminAuthController::class, 'loginPage'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
@@ -99,6 +100,8 @@ Route::get('/privacy-policy', function () {
 Route::get('/terms', function () {
     return view('storeFront.terms');
 })->name('terms');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
 
 
 
