@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -61,6 +62,12 @@ Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
     Route::get('/customers/{id}', [CustomerController::class, 'show'])->name('admin.customers.show');
     Route::put('/customers/{customer}/toggle-block', [CustomerController::class, 'toggleBlock'])->name('admin.customers.toggle-block');
     Route::get('/customers/{id}/orders', [CustomerController::class, 'orders'])->name('admin.customers.orders');
+
+     Route::get('/messages', [MessageController::class, 'index'])->name('admin.messages.index');
+    Route::get('/messages/{message}', [MessageController::class, 'show'])->name('admin.messages.show');
+    Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('admin.messages.destroy');
+  
+
 
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics.index');
     Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
