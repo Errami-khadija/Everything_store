@@ -29,6 +29,33 @@ class AdminAuthController extends Controller
         return redirect('/admin/dashboard');
     }
 
+    public function registerPage()
+{
+    return view('admin.register');
+}
+
+public function register(Request $request)
+{
+    // Validate input
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:admins,email',
+        'password' => 'required|min:6|confirmed',
+    ]);
+
+    // Create admin
+    $admin = Admin::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    // Auto login after register
+    session(['admin_id' => $admin->id]);
+
+    return redirect('/admin/dashboard')->with('success', 'Admin created successfully');
+}
+
     public function logout()
     {
         session()->forget('admin_id');

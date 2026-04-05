@@ -21,6 +21,9 @@ use App\Http\Controllers\StoreFront\ContactController;
 Route::get('/admin/login', [AdminAuthController::class, 'loginPage'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
 
+Route::get('/admin/register', [AdminAuthController::class, 'registerPage']);
+Route::post('/admin/register', [AdminAuthController::class, 'register']);
+
 // Admin Protected Area
 Route::prefix('admin')->middleware(['adminAuth'])->group(function () {
 
