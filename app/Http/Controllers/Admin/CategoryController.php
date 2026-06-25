@@ -39,7 +39,7 @@ class CategoryController extends Controller
 
         // image upload
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('categories', 'public');
+            $data['image'] = $request->file('image')->store('uploads/categories', 'public');
         }
 
         Category::create($data);
@@ -74,10 +74,10 @@ public function update(Request $request, Category $category)
     // Replace image if uploaded
     if ($request->hasFile('image')) {
         // Delete old image
-        if ($category->image && file_exists(storage_path('app/public/categories/' . $category->image))) {
-            unlink(storage_path('app/public/categories/' . $category->image));
+        if ($category->image && file_exists(storage_path('uploads/categories/' . $category->image))) {
+            unlink(storage_path('uploads/categories/' . $category->image));
         }
-        $data['image'] = $request->file('image')->store('categories', 'public');
+        $data['image'] = $request->file('image')->store('uploads/categories', 'public');
     }
 
     $category->update($data);
@@ -89,8 +89,8 @@ public function update(Request $request, Category $category)
     public function destroy(Category $category)
 {
     // Delete image file from storage if exists
-    if ($category->image && file_exists(storage_path('app/public/categories/' . $category->image))) {
-        unlink(storage_path('app/public/categories/' . $category->image));
+    if ($category->image && file_exists(storage_path('uploads/categories/' . $category->image))) {
+        unlink(storage_path('uploads/categories/' . $category->image));
     }
 
     // Delete category from database

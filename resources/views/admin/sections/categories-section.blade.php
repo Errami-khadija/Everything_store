@@ -178,7 +178,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Current Image</label>
 
-                    <img src="{{ asset('storage/' . $selectedCategory->image) }}"
+                    <img src="{{ asset('storage/' . $selectedCategory->image)  }}"
                          class="w-32 h-32 object-cover rounded-lg mb-3">
                   <div class="border-2 border-gray-400 border-dashed p-4 rounded-lg text-center">
                     <label class="cursor-pointer">
