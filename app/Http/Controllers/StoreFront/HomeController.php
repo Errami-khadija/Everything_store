@@ -45,7 +45,7 @@ class HomeController extends Controller
                                   ->get();
 
 
-        return view('storefront.product', compact('product', 'relatedProducts'));
+        return view('storeFront.product', compact('product', 'relatedProducts'));
     }
 
     public function showStore()
