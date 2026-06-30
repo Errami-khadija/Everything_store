@@ -38,7 +38,7 @@
        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
         <div class="bg-gray-200 h-60 rounded-lg mb-4 flex items-center justify-center">
     @if (!empty($product->images) && isset($product->images[0]))
-            <img src="{{ asset('uploads/products/' . $product->images[0]) }}" class="h-full w-full object-cover rounded-lg">
+            <img src="{{ asset('uploads/products/' . $product->images[0]) }}" alt="{{ $product->name }} product image" class="h-full w-full object-cover rounded-lg">
         @else
             <span class="text-gray-500">No image</span>
         @endif
